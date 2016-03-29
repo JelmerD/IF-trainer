@@ -1,0 +1,106 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+
+    <title>HSI</title>
+
+    <link rel="stylesheet" href="style/reset.css?v=1.0">
+    <link rel="stylesheet" href="style/style.css?v=1.0">
+    <script src="scripts/jquery.js"></script>
+    <script src="scripts/Plane.js"></script>
+    <script src="scripts/Plot.js"></script>
+    <script src="scripts/Beacon.js"></script>
+    <script src="scripts/HSI.js"></script>
+    <script src="scripts/AI.js"></script>
+    <script src="scripts/main.js"></script>
+</head>
+
+<body>
+
+<div id="debug">
+    <table>
+        <tr class="stopwatch">
+            <td class="label">Stopwatch</td>
+            <td class="value"></td>
+        </tr>
+        <tr class="kias">
+            <td class="label">Speed (KIAS)</td>
+            <td class="value"></td>
+        </tr>
+        <tr class="vtas">
+            <td class="label">Speed (KTAS)</td>
+            <td class="value"></td>
+        </tr>
+        <tr class="pitch">
+            <td class="label">Pitch</td>
+            <td class="value"></td>
+        </tr>
+        <tr class="aob">
+            <td class="label">AOB</td>
+            <td class="value"></td>
+        </tr>
+        <tr class="vv">
+            <td class="label">Vertical speed (feet/min)</td>
+            <td class="value"></td>
+        </tr>
+        <tr class="alt">
+            <td class="label">Altitude (feet)</td>
+            <td class="value"></td>
+        </tr>
+        <tr class="turn-rate">
+            <td class="label">Turn rate (deg/sec)</td>
+            <td class="value"></td>
+        </tr>
+        <tr class="hdg">
+            <td class="label">Heading</td>
+            <td class="value"></td>
+        </tr>
+        <tr class="tt">
+            <td class="label">True Track</td>
+            <td class="value"></td>
+        </tr>
+        <tr class="gs">
+            <td class="label">Ground Speed</td>
+            <td class="value"></td>
+        </tr>
+        <tr class="pos-x">
+            <td class="label">Pos X</td>
+            <td class="value"></td>
+        </tr>
+        <tr class="pos-y">
+            <td class="label">Pos Y</td>
+            <td class="value"></td>
+        </tr>
+    </table>
+</div>
+
+<canvas id="plot"></canvas>
+<canvas id="ai" class="instrument"></canvas>
+<canvas id="hsi" class="instrument"></canvas>
+
+<div id="controls">
+    <div class="control-group zoom">
+        <div class="label">Zoom</div>
+        <button onclick="javascript: plot.zoom(-1);">-</button>
+        <input class="value" type="text" disabled="disabled"/>
+        <button onclick="javascript: plot.zoom(1);">+</button>
+    </div>
+    <div class="control-group hsi-course">
+        <div class="label">Course</div>
+        <button onclick="javascript: hsi.adjustCourse(false);">-</button>
+        <input class="value" type="text" onfocus="javascript: hsi.onFocusCourse();" onblur="javascript: hsi.onBlurCourse();"/>
+        <button onclick="javascript: hsi.adjustCourse(true);">+</button>
+    </div>
+    <div class="control-group hsi-bug">
+        <div class="label">Hdg bug</div>
+        <button onclick="javascript: hsi.adjustHeadingBug(false);">-</button>
+        <input class="value" type="text" onfocus="javascript: hsi.onFocusHeadingBug();" onblur="javascript: hsi.onBlurHeadingBug();"/>
+        <button onclick="javascript: hsi.adjustHeadingBug(true);">+</button>
+    </div>
+</div>
+
+
+</body>
+</html>

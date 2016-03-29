@@ -1,0 +1,68 @@
+body {
+    background: #000;
+    font-family: courier, sans-serif;
+}
+
+#plot {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
+}
+
+#debug {
+    color: #fff;
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    z-index: 2;
+}
+
+.instrument {
+    position: absolute;
+    z-index: 3;
+}
+
+#ai {
+    bottom: 5px;
+    left: 5px;
+}
+
+#hsi {
+    bottom: 5px;
+    left: 210px;
+}
+
+#controls {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    z-index: 2;
+    text-align: right;
+}
+
+#controls button,
+#controls input {
+    padding: 10px;
+    font-size: 15px;
+    backround: #eee;
+    border: 1px solid #ccc;
+    font-weight: bold;
+    text-align: center;
+}
+#controls button {
+    width: 40px;
+}
+#controls input {
+    width: 50px;
+}
+#controls div.label {
+    display: inline-block;
+    color: #fff;
+    margin: 0;
+}
+
+#controls .control-group {
+    margin-bottom: 5px;
+}
+
