@@ -1,17 +1,17 @@
-function Plot() {
+function Map() {
     var $this = this;
-    var canvas = $('#plot');
+    var canvas = $('#canvas-map');
     var zoomIndicator = $('#controls .zoom .value');
     var isDragging = false, previousX, previousY;
 
     var colors = {
         track: '#f00',
         grid: '#333',
-        beacon: '#777',
+        beacon: '#999',
     }
 
-    var width = window.innerWidth,
-        height = window.innerHeight;
+    var width = canvas.width(),
+        height = canvas.height();
 
     var mapCoordinates = [
         {lat: [50,30], lon: [2,0]},

@@ -1,36 +1,111 @@
-body {
-    background: #000;
+html, body {
+    background: #222;
     font-family: courier, sans-serif;
+    height: 100%;
+    overflow-y: hidden;
 }
 
-#plot {
+* {
+    box-sizing: border-box;
+}
+
+input {
+    padding: 10px;
+    font-size: 15px;
+    backround: #eee;
+    border: 1px solid #ccc;
+    font-weight: bold;
+    text-align: center;
+    width: 100%;
+}
+
+.container {
+    float: left;
+    height: 100%;
+}
+
+.container.instruments {
+    width: 30%;
+}
+
+.container.instruments .bottom {
+    overflow-y: hidden;
+    padding: 10px 0;
+    color: #ff2205;
+    font-size: 40px;
+    font-weight: bold;
+}
+
+.container.instruments .bottom > div {
+    width: 50%;
+    float: left;
+    text-align: center;
+}
+
+.container.instruments .bottom .value {
+    width: 50%;
+    display: inline-block;
+}
+
+.container.map {
+    width: 70%;
+}
+
+#canvas-ai {
+    width: 38%;
+    display: inline-block;
+    float: left;
+}
+
+#canvas-hsi {
+    width: 100%;
+}
+
+#canvas-map {
+    background: #000;
+    height: 100%;
+    width: 100%;
+}
+
+.heading {
+    border-bottom: 1px solid #fff;
+    font-size: 18px;
+}
+
+#beacon-select {
     position: absolute;
     top: 0;
     left: 0;
-    z-index: 1;
+    width: 100%;
+    height: 100%;
+    background: rgba(50, 50, 50, 0.5);
+    z-index: 4;
+    display: none;
+}
+
+#beacon-select .inner {
+    background: #000;
+    color: #fff;
+    width: 200px;
+    margin: 10% auto;
+    padding: 20px;
+}
+
+#beacon-select li {
+    padding: 2px 0;
+    cursor: pointer;
+}
+
+#beacon-select li:hover {
+    color: #05AB13;
 }
 
 #debug {
     color: #fff;
-    position: absolute;
-    top: 5px;
-    left: 5px;
-    z-index: 2;
-}
-
-.instrument {
-    position: absolute;
-    z-index: 3;
-}
-
-#ai {
-    bottom: 5px;
-    left: 5px;
-}
-
-#hsi {
-    bottom: 5px;
-    left: 210px;
+    width: 60%;
+    padding: 1%;
+    float: left;
+    display: inline-block;
 }
 
 #controls {
@@ -41,8 +116,7 @@ body {
     text-align: right;
 }
 
-#controls button,
-#controls input {
+#controls button {
     padding: 10px;
     font-size: 15px;
     backround: #eee;
@@ -50,12 +124,15 @@ body {
     font-weight: bold;
     text-align: center;
 }
+
 #controls button {
     width: 40px;
 }
+
 #controls input {
     width: 50px;
 }
+
 #controls div.label {
     display: inline-block;
     color: #fff;
@@ -64,5 +141,13 @@ body {
 
 #controls .control-group {
     margin-bottom: 5px;
+}
+
+#controls .control-group button.value {
+    color: #A70606;
+}
+
+#controls .control-group button.value.on {
+    color: #05AB13;
 }
 

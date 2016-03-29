@@ -1,9 +1,8 @@
 function AI() {
     var $this = this;
 
-    var size = 200;
-
-    var canvas = $('#ai');
+    var canvas = $('#canvas-ai');
+    var size = canvas.width();
     canvas.attr({
         width: size,
         height: size
