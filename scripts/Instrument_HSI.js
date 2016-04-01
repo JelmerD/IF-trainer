@@ -2,8 +2,8 @@ function HSI() {
     var $this = this;
 
     var canvas = $('#canvas-hsi'),
-        $courseBox = $('#controls .hsi-course .value'),
-        $bugBox = $('#controls .hsi-bug .value');
+        $courseBox = $('.control-group.hsi-course .value'),
+        $bugBox = $('.control-group.hsi-bug .value');
     var size = canvas.width();
 
     canvas.attr({

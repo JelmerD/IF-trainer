@@ -29,23 +29,23 @@
                     <td class="value"></td>
                 </tr>
                 <tr class="kias">
-                    <td class="label">Speed (KIAS)</td>
+                    <td class="label">KIAS</td>
                     <td class="value"></td>
                 </tr>
                 <tr class="vtas">
-                    <td class="label">Speed (KTAS)</td>
+                    <td class="label">TAS</td>
                     <td class="value"></td>
                 </tr>
                 <tr class="vv">
-                    <td class="label">Vertical speed (feet/min)</td>
+                    <td class="label">Vertical speed&nbsp;</td>
                     <td class="value"></td>
                 </tr>
                 <tr class="alt">
-                    <td class="label">Altitude (feet)</td>
+                    <td class="label">Altitude</td>
                     <td class="value"></td>
                 </tr>
                 <tr class="turn-rate">
-                    <td class="label">Turn rate (deg/sec)</td>
+                    <td class="label">Turn rate</td>
                     <td class="value"></td>
                 </tr>
             </table>
@@ -61,54 +61,72 @@
         <div class="info relative-speed"><span class="value">0</span>&nbsp;KTS</div>
     </div>
 </div>
+<div class="container controls">
+
+
+    <div class="control-group info pause">
+        <div class="label"><span>P</span>ause</div>
+        <button class="col1 value" onclick="javascript: my.scene.togglePause()">P</button>
+    </div>
+
+    <div class="control-group info station">
+        <div class="label"><span>S</span>tation</div>
+        <input class="col4 value" readonly="readonly" onclick="javascript: my.scene.openBeaconSelect();"/>
+    </div>
+
+    <div class="control-group hsi-course">
+        <div class="label"><span>C</span>ourse</div>
+        <button class="col1" onclick="javascript: my.instrument.hsi.adjustCourse(false);">-</button>
+        <input class="col2 value" type="text" onfocus="javascript: my.instrument.hsi.onFocusCourse();"
+               onblur="javascript: my.instrument.hsi.onBlurCourse();"/>
+        <button class="col1" onclick="javascript: my.instrument.hsi.adjustCourse(true);">+</button>
+    </div>
+
+    <div class="control-group hsi-bug">
+        <div class="label"><span>B</span>ug</div>
+        <button class="col1" onclick="javascript: my.instrument.hsi.adjustHeadingBug(false);">-</button>
+        <input class="col2 value" type="text" onfocus="javascript: my.instrument.hsi.onFocusHeadingBug();"
+               onblur="javascript: my.instrument.hsi.onBlurHeadingBug();"/>
+        <button class="col1" onclick="javascript: my.instrument.hsi.adjustHeadingBug(true);">+</button>
+    </div>
+
+    <div class="control-group info auto-turn">
+        <div class="label"><span>T</span>urn</div>
+        <button class="col4 value" onclick="javascript: my.plane.toggleAutoTurn(my.instrument.hsi.getHeadingBug())">
+            off
+        </button>
+    </div>
+
+    <div class="control-group wind">
+        <div class="label"><span>W</span>ind</div>
+        <button class="value col4" onclick="javascript: my.scene.openWindSelect();">000 / 00</button>
+    </div>
+
+</div>
 <div class="container map">
-    <canvas id="canvas-map"></canvas>
+    <div class="control-group zoom" style="display: none;">
+        <div class="label">Zoom</div>
+        <button class="col1" onclick="javascript: my.map.zoom(-1);">-</button>
+        <input class="col2 value" type="text" disabled="disabled"/>
+        <button class="col1" onclick="javascript: my.map.zoom(1);">+</button>
+    </div>
 </div>
 
-<div id="beacon-select" onclick="javascript: my.scene.closeBeaconSelect();">
+<div class="select" id="beacon-select" onclick="javascript: my.scene.closeBeaconSelect();">
     <div class="inner">
         <div class="heading">Select beacon</div>
         <ul></ul>
         <div>
-            <input class="value" type="text" onkeyup="javascript: my.scene.selectBeacon($(this).val());"/>
+            <input class="value" type="text" placeholder="Type number" onkeyup="javascript: my.scene.selectBeacon($(this).val());"/>
         </div>
     </div>
 </div>
 
-<div id="controls">
-    <div class="control-group zoom">
-        <div class="label">Zoom</div>
-        <button onclick="javascript: my.map.zoom(-1);">-</button>
-        <input class="value" type="text" disabled="disabled"/>
-        <button onclick="javascript: my.map.zoom(1);">+</button>
-    </div>
-    <div class="control-group hsi-course">
-        <div class="label"><span>C</span>ourse</div>
-        <button onclick="javascript: my.instrument.hsi.adjustCourse(false);">-</button>
-        <input class="value" type="text" onfocus="javascript: my.instrument.hsi.onFocusCourse();"
-               onblur="javascript: my.instrument.hsi.onBlurCourse();"/>
-        <button onclick="javascript: my.instrument.hsi.adjustCourse(true);">+</button>
-    </div>
-    <div class="control-group hsi-bug">
-        <div class="label"><span>B</span>ug</div>
-        <button onclick="javascript: my.instrument.hsi.adjustHeadingBug(false);">-</button>
-        <input class="value" type="text" onfocus="javascript: my.instrument.hsi.onFocusHeadingBug();"
-               onblur="javascript: my.instrument.hsi.onBlurHeadingBug();"/>
-        <button onclick="javascript: my.instrument.hsi.adjustHeadingBug(true);">+</button>
-    </div>
-    <div class="control-group info auto-turn">
-        <div class="label">Auto turn</div>
-        <button class="value" onclick="javascript: my.plane.toggleAutoTurn(my.instrument.hsi.getHeadingBug())">T
-        </button>
-    </div>
-    <div class="control-group info station">
-        <div class="label">Station</div>
-        <button class="value" onclick="javascript: my.scene.openBeaconSelect();">S
-        </button>
-    </div>
-    <div class="control-group info pause">
-        <div class="label">Pause</div>
-        <button class="value" onclick="javascript: my.scene.togglePause()">P</button>
+<div class="select" id="wind-select" onclick="javascript: my.scene.closeWindSelect();">
+    <div class="inner">
+        <div class="heading">Set wind</div>
+        <input class="direction" type="text" placeholder="direction (ie. 240)" onkeyup="javascript: my.scene.selectWindDirection($(this).val());"/>
+        <input class="velocity" type="text" placeholder="velocity (ie. 07)" onkeyup="javascript: my.scene.selectWindVelocity($(this).val());"/>
     </div>
 </div>
 

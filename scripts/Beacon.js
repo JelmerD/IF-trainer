@@ -39,5 +39,5 @@ function Beacon(id) {
     $this.chan = beacons[id].chan;
     $this.lat = beacons[id].lat;
     $this.lon = beacons[id].lon;
-    $this.pos = coordinateToNauticalMile($this.lat, $this.lon)
+    $this.pos = coordinateToNauticalMile($this.lat, $this.lon);
 }

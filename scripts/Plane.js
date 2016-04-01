@@ -2,7 +2,7 @@ function Plane(lat, lon) {
     var $this = this;
     var _pos = coordinateToNauticalMile(lat, lon);
     var _autoTurn = {
-        enabled: false,
+        enabled: false, // false, 1 = half standard, 2 = standard
         targetHeading: 0,
         targetBankAngle: 0,
         standardRate: 0,
@@ -29,7 +29,7 @@ function Plane(lat, lon) {
 
     // wind (we need that here for calculations)
     $this.windVelocity = 0;         //kts
-    $this.windDirection = 0;        //where it is blowing TO
+    $this.windDirection = 0;        //where it is blowing from
 
     // increments used for control inputs
     $this.increments = {
@@ -178,7 +178,7 @@ function Plane(lat, lon) {
     $this.calcPosition = function() {
         // convert the headings to radians for sin/cos calc
         var hdgRadians = toRadians($this.heading);
-        var windRadians = toRadians($this.windDirection);
+        var windRadians = toRadians($this.windDirection - 180);
         // calculate the X delta
         var planeX = Math.round((Math.sin(hdgRadians) * ($this.fakeGroundSpeed / 3600)) * 1e3) / 1e3;
         var windX = Math.round((Math.sin(windRadians) * ($this.windVelocity / 3600)) * 1e3) / 1e3;
@@ -198,22 +198,27 @@ function Plane(lat, lon) {
     };
 
     $this.toggleAutoTurn = function(hdg) {
-        if (_autoTurn.enabled) {
-            disableAutoTurn();
-        } else {
-            enableAutoTurn();
-            $this.updateAutoTurn(hdg);
+        switch (_autoTurn.enabled) {
+            case false:
+                enableAutoTurn(_autoTurn.halfStandardRate, '&frac12; standard rate');
+                break;
+            case _autoTurn.halfStandardRate:
+                enableAutoTurn(_autoTurn.standardRate, 'standard rate');
+                break;
+            case _autoTurn.standardRate:
+                disableAutoTurn();
+                break;
         }
     };
 
-    function enableAutoTurn() {
-        _autoTurn.enabled = true;
-        $('.info.auto-turn .value').addClass('on');
+    function enableAutoTurn(n, t) {
+        _autoTurn.enabled = n;
+        $('.info.auto-turn .value').html(t).addClass('on');
     }
 
     function disableAutoTurn() {
         _autoTurn.enabled = false;
-        $('.info.auto-turn .value').removeClass('on');
+        $('.info.auto-turn .value').html('off').removeClass('on');
     }
 
     $this.updateAutoTurn = function(hdg) {
@@ -224,12 +229,12 @@ function Plane(lat, lon) {
     function autoTurn() {
         var diff = calcHeadingDiff($this.heading, _autoTurn.targetHeading);
         if (diff < -.01) {
-            _autoTurn.targetBankAngle = -Math.round(_autoTurn.halfStandardRate);
+            _autoTurn.targetBankAngle = -Math.round(_autoTurn.enabled);
             if (diff > _autoTurn.targetBankAngle / 3) {
                 _autoTurn.targetBankAngle = Math.floor(diff);
             }
         } else if (diff > .01) {
-            _autoTurn.targetBankAngle = Math.round(_autoTurn.halfStandardRate);
+            _autoTurn.targetBankAngle = Math.round(_autoTurn.enabled);
             if (diff < _autoTurn.targetBankAngle / 3) {
                 _autoTurn.targetBankAngle = Math.ceil(diff);
             }
@@ -255,19 +260,24 @@ function Plane(lat, lon) {
      */
     $this.timerTick = function() {
         frame++;
-        if (_autoTurn.enabled) {
+        if (_autoTurn.enabled != false) {
             autoTurn();
         }
-        $this.calcAltitude();
-        $this.calcTrueAirspeed();
-        $this.calcFakeGroundSpeed();
-        $this.calcHeading();
-        $this.calcPosition();
+
+        $this.calc();
 
         frame = frame % FRAME_RATE;
         if (frame == 0) {
             $this.logPosition();
         }
+    }
+
+    $this.calc = function() {
+        $this.calcAltitude();
+        $this.calcTrueAirspeed();
+        $this.calcFakeGroundSpeed();
+        $this.calcHeading();
+        $this.calcPosition();
     }
 
     $this.keyDown = function(keyCode) {
@@ -298,5 +308,7 @@ function Plane(lat, lon) {
     $this.onControlUpdate = function(){};
     $this.onPositionUpdate = function(position) {};
 
+    $this.calc();
+    controlUpdate();
     $this.logPosition();
 }

@@ -53,12 +53,13 @@ function Scene() {
         my.instrument.ai = new AI();
         my.instrument.hsi = new HSI();
         my.map = new Map();
+        my.map.show();
         addBeacon('WDT');
         addBeacon('GZR');
         addBeacon('LWD');
         my.plane = new Plane(my.beacon.WDT.lat, my.beacon.WDT.lon);
         my.map.moveToLatLon(my.beacon.WDT.lat, my.beacon.WDT.lon);
-        my.instrument.hsi.updateBeacon(my.beacon.WDT);
+        $this.selectBeacon(1);
 
         my.plane.onPositionUpdate = function(position) {
             my.map.appendTrackPoint(position);
@@ -107,13 +108,15 @@ function Scene() {
             case 80: //p
                 $this.togglePause(); break;
             case 66: //b
-                $('#controls .hsi-bug .value').focus(); break;
+                $('.control-group.hsi-bug .value').focus(); break;
             case 67: //c
-                $('#controls .hsi-course .value').focus(); break;
+                $('.control-group.hsi-course .value').focus(); break;
             case 83: //s
                 $this.openBeaconSelect(); break;
             case 84: //t
                 my.plane.toggleAutoTurn(my.instrument.hsi.getHeadingBug()); break;
+            case 87: //w
+                $this.openWindSelect(); break;
         }
     }
 
@@ -151,20 +154,63 @@ function Scene() {
             }
         }
         $('#beacon-select').show();
-        $('.info.station .value').addClass('on');
         $('#beacon-select input').val('').focus();
     }
 
     $this.closeBeaconSelect = function() {
         $('#beacon-select').hide();
-        $('.info.station .value').removeClass('on');
     }
 
     $this.selectBeacon = function(value) {
         $this.closeBeaconSelect();
         if (isNumber(value) && beaconIndexes[value - 1] != undefined) {
             my.instrument.hsi.updateBeacon(my.beacon[beaconIndexes[value - 1]]);
+            $('.info.station .value').val(my.beacon[beaconIndexes[value - 1]].name);
         }
+    }
+
+    $this.openWindSelect = function() {
+        $('#wind-select').show();
+        $('#wind-select input.velocity').val('');
+        $('#wind-select input.direction').val('').focus();
+    }
+
+    $this.closeWindSelect = function() {
+        $('#wind-select').hide();
+    }
+
+    $this.selectWindDirection = function(value) {
+        if (isNumber(value)) {
+            if (value.length == 3) {
+                my.plane.windDirection = value % 360;
+                updateWindControl();
+                $('#wind-select input.velocity').focus();
+            }
+        } else {
+            $this.closeWindSelect();
+        }
+    }
+
+    $this.selectWindVelocity = function(value) {
+        if (isNumber(value)) {
+            if (value.length == 2) {
+                my.plane.windVelocity = parseInt(value);
+                updateWindControl();
+                $this.closeWindSelect();
+            }
+        } else {
+            $this.closeWindSelect();
+        }
+    }
+
+    function updateWindControl() {
+        if (my.plane.windVelocity == 0) {
+            $('.control-group.wind .value').removeClass('on');
+        } else {
+            $('.control-group.wind .value').addClass('on');
+        }
+        $('.control-group.wind .value').text(pad(3, my.plane.windDirection) + ' / ' + pad(2, my.plane.windVelocity));
+        my.map.setWind(my.plane.windDirection, my.plane.windVelocity);
     }
 
     /**

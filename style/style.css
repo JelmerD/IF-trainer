@@ -3,6 +3,7 @@ html, body {
     font-family: courier, sans-serif;
     height: 100%;
     overflow-y: hidden;
+    font-size: 14px;
 }
 
 * {
@@ -24,16 +25,18 @@ input {
     height: 100%;
 }
 
+/******************************************************************************************************** INSTRUMENTS */
+
 .container.instruments {
-    width: 30%;
+    width: 500px;
+    padding-right: 5px;
 }
 
 .container.instruments .bottom {
     overflow-y: hidden;
     padding: 10px 0;
     color: #ff2205;
-    font-size: 40px;
-    font-weight: bold;
+    font-size: 35px;
 }
 
 .container.instruments .bottom > div {
@@ -47,9 +50,6 @@ input {
     display: inline-block;
 }
 
-.container.map {
-    width: 70%;
-}
 
 #canvas-ai {
     width: 38%;
@@ -61,10 +61,70 @@ input {
     width: 100%;
 }
 
-#canvas-map {
-    background: #000;
-    height: 100%;
+/*********************************************************************************************************** CONTROLS */
+
+.container.controls {
+    width: 300px;
+    padding: 5px;
+    border-right: 6px double #ffff00;
+    border-left: solid 1px #555;
+}
+
+.control-group {
+    margin-bottom: 5px;
+    overflow-y: hidden;
+}
+
+.control-group > *{
+    float: left;
+}
+
+.control-group .col1 {width: 50px;}
+.control-group .col2 {width: 100px;}
+.control-group .col3 {width: 150px;}
+.control-group .col4 {width: 200px;}
+
+.control-group div.label {
+    display: inline-block;
+    padding: 12px 2px;
+    width: 80px;
+    color: #fff;
+}
+
+.control-group div.label > span {
+    font-weight: bold;
+    color: #ffff00;
+    text-decoration: underline;
+}
+
+.control-group button,
+.control-group input {
+    padding: 10px;
+    font-size: 15px;
+    border: 1px solid #ccc;
+    background: #fff;
     width: 100%;
+}
+
+.control-group button.value {
+    color: #A70606;
+    font-weight: bold;
+}
+
+.control-group button.value.on {
+    color: #05AB13;
+}
+
+.control-group.zoom {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+}
+
+/**************************************************************************************************************** MAP */
+
+.container.map {
+    /*background: #fff;*/
 }
 
 .heading {
@@ -72,7 +132,9 @@ input {
     font-size: 18px;
 }
 
-#beacon-select {
+/************************************************************************************************************* SELECT */
+
+.select {
     position: absolute;
     top: 0;
     left: 0;
@@ -83,12 +145,16 @@ input {
     display: none;
 }
 
-#beacon-select .inner {
+.select .inner {
     background: #000;
     color: #fff;
     width: 200px;
     margin: 10% auto;
     padding: 20px;
+}
+
+#beacon-select ul {
+    margin: 5px 0;
 }
 
 #beacon-select li {
@@ -97,7 +163,7 @@ input {
 }
 
 #beacon-select li:hover {
-    color: #05AB13;
+    color: #ff0;
 }
 
 #debug {
@@ -115,39 +181,3 @@ input {
     z-index: 2;
     text-align: right;
 }
-
-#controls button {
-    padding: 10px;
-    font-size: 15px;
-    backround: #eee;
-    border: 1px solid #ccc;
-    font-weight: bold;
-    text-align: center;
-}
-
-#controls button {
-    width: 40px;
-}
-
-#controls input {
-    width: 50px;
-}
-
-#controls div.label {
-    display: inline-block;
-    color: #fff;
-    margin: 0;
-}
-
-#controls .control-group {
-    margin-bottom: 5px;
-}
-
-#controls .control-group button.value {
-    color: #A70606;
-}
-
-#controls .control-group button.value.on {
-    color: #05AB13;
-}
-
