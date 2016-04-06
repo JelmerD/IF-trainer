@@ -191,7 +191,7 @@ function Map() {
      *
      * @param e
      */
-    function onMouseDown(e) {
+    function onTapStart(e) {
         isDragging = true;
         previousX = e.clientX;
         previousY = e.clientY;
@@ -202,7 +202,7 @@ function Map() {
      *
      * @param e
      */
-    function onMouseUp(e) {
+    function onTapEnd(e) {
         isDragging = false;
     }
 
@@ -218,7 +218,7 @@ function Map() {
      *
      * @param e
      */
-    function onMouseMove(e) {
+    function onTapMove(e) {
         if (isDragging) {
             var newViewCenter = {
                 x: viewCenter.x - ((e.clientX - previousX) / zoom),
@@ -270,9 +270,9 @@ function Map() {
             height: height
         });
         $('.container.map').width(width).append($canvas);
-        $canvas.on('mousedown', onMouseDown)
-            .on('mouseup', onMouseUp)
-            .on('mousemove', onMouseMove)
+        $canvas.on('tapstart', onTapStart)
+            .on('tapend', onTapEnd)
+            .on('tapmove', onTapMove)
             .on('mouseout', onMouseOut);
         ctx = $canvas.get(0).getContext('2d');
         //ctx.transform(1, 0, 0, -1, 0, height);
