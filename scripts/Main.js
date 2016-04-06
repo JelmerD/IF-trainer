@@ -275,7 +275,7 @@ function Timer() {
         var h = Math.floor(elapsed / (60 * 60 * 1000)),
             m = Math.floor(elapsed / (60 * 1000)) % 60,
             s = Math.floor(elapsed / 1000) % 60,
-            ms = elapsed % 1000;
+            ms = parseInt(elapsed % 1000);
 
         return pad(2, h) + ':' + pad(2, m) + ':' + pad(2, s) + ':' + pad(3, ms);
     }
