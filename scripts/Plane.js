@@ -226,6 +226,13 @@ function Plane(lat, lon) {
         _autoTurn.targetHeading = hdg;
     }
 
+    $this.setAttitude = function(bank, pitch) {
+        disableAutoTurn();
+        $this.bankAngle = bank;
+        $this.pitch = pitch;
+        controlUpdate();
+    }
+
     function autoTurn() {
         var diff = calcHeadingDiff($this.heading, _autoTurn.targetHeading);
         if (diff < -.01) {
