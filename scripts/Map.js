@@ -31,7 +31,7 @@ function Map() {
             grid: '#333',
             beacon: '#999',
         },
-        width = window.innerWidth - $('.container.instruments').outerWidth() - $('.container.controls').outerWidth(),
+        width = window.innerWidth - $('.container.instruments').outerWidth() - $('.container.controls').outerWidth() - 1,
         height = window.innerHeight,
         mapCoordinates = [
             {lat: [50, 30], lon: [2, 0]},
