@@ -91,15 +91,17 @@ function Map() {
      * Draw the area borders on the canvas
      */
     function drawAreaBorder() {
-        ctx.beginPath();
-        ctx.lineWidth = 1;
-        ctx.strokeStyle = colors.grid;
-        ctx.moveTo(x(mapBorder.left), y(mapBorder.bottom));
-        ctx.lineTo(x(mapBorder.left), y(mapBorder.top));
-        ctx.lineTo(x(mapBorder.right), y(mapBorder.top));
-        ctx.lineTo(x(mapBorder.right), y(mapBorder.bottom));
-        ctx.lineTo(x(mapBorder.left), y(mapBorder.bottom));
-        ctx.stroke();
+        if (visible) {
+            ctx.beginPath();
+            ctx.lineWidth = 1;
+            ctx.strokeStyle = colors.grid;
+            ctx.moveTo(x(mapBorder.left), y(mapBorder.bottom));
+            ctx.lineTo(x(mapBorder.left), y(mapBorder.top));
+            ctx.lineTo(x(mapBorder.right), y(mapBorder.top));
+            ctx.lineTo(x(mapBorder.right), y(mapBorder.bottom));
+            ctx.lineTo(x(mapBorder.left), y(mapBorder.bottom));
+            ctx.stroke();
+        }
     }
 
     /**
@@ -117,27 +119,29 @@ function Map() {
      * @param beacon
      */
     function drawBeacon(beacon) {
-        // draw n circles, every d nM apart
-        var n = 4, d = 5, i = 0;
-        ctx.strokeStyle = colors.beacon;
-        ctx.fillStyle = colors.beacon;
-        ctx.font = '12px sans-serif';
-        ctx.strokeWidth = 1;
-        while (++i, i <= n) {
+        if (visible) {
+            // draw n circles, every d nM apart
+            var n = 4, d = 5, i = 0;
+            ctx.strokeStyle = colors.beacon;
+            ctx.fillStyle = colors.beacon;
+            ctx.font = '12px sans-serif';
+            ctx.strokeWidth = 1;
+            while (++i, i <= n) {
+                ctx.beginPath();
+                ctx.arc(x(beacon.pos.x), y(beacon.pos.y), scale(i * d), 0, 2 * Math.PI);
+                ctx.stroke();
+                ctx.fillText((i * 5).toString(), x(beacon.pos.x) + 2, y(beacon.pos.y + (i * 5)) - 5);
+            }
             ctx.beginPath();
-            ctx.arc(x(beacon.pos.x), y(beacon.pos.y), scale(i * d), 0, 2 * Math.PI);
+            ctx.moveTo(x(beacon.pos.x - (n * d)), y(beacon.pos.y));
+            ctx.lineTo(x(beacon.pos.x + (n * d)), y(beacon.pos.y));
             ctx.stroke();
-            ctx.fillText((i * 5).toString(), x(beacon.pos.x) + 2, y(beacon.pos.y + (i * 5)) - 5);
+            ctx.beginPath();
+            ctx.moveTo(x(beacon.pos.x), y(beacon.pos.y - (n * d)));
+            ctx.lineTo(x(beacon.pos.x), y(beacon.pos.y + (n * d)));
+            ctx.stroke();
+            ctx.fillText(beacon.name, x(beacon.pos.x) + 5, y(beacon.pos.y) - 5);
         }
-        ctx.beginPath();
-        ctx.moveTo(x(beacon.pos.x - (n * d)), y(beacon.pos.y));
-        ctx.lineTo(x(beacon.pos.x + (n * d)), y(beacon.pos.y));
-        ctx.stroke();
-        ctx.beginPath();
-        ctx.moveTo(x(beacon.pos.x), y(beacon.pos.y - (n * d)));
-        ctx.lineTo(x(beacon.pos.x), y(beacon.pos.y + (n * d)));
-        ctx.stroke();
-        ctx.fillText(beacon.name, x(beacon.pos.x) + 5, y(beacon.pos.y) - 5);
     }
 
     /**
@@ -157,16 +161,18 @@ function Map() {
      * @param b point b
      */
     function drawTrackPart(a, b) {
-        ctx.beginPath();
-        ctx.lineWidth = 2;
-        ctx.strokeStyle = colors.track;
-        ctx.moveTo(x(a[0]), y(a[1]));
-        ctx.lineTo(x(b[0]), y(b[1]));
-        ctx.stroke();
+        if (visible) {
+            ctx.beginPath();
+            ctx.lineWidth = 2;
+            ctx.strokeStyle = colors.track;
+            ctx.moveTo(x(a[0]), y(a[1]));
+            ctx.lineTo(x(b[0]), y(b[1]));
+            ctx.stroke();
+        }
     }
 
     function drawWind() {
-        if (wind.velocity != 0) {
+        if (visible && wind.velocity != 0) {
             ctx.beginPath();
             ctx.lineWidth = 1;
             ctx.strokeStyle = '#ff0';
@@ -242,7 +248,9 @@ function Map() {
      * Move the map to the 0,0 position, depending on the current viewCenter
      */
     function moveToOrigin() {
-        ctx.translate(-((width / 2) - x(viewCenter.x)), -(-y(viewCenter.y) + (height / 2)));
+        if (visible) {
+            ctx.translate(-((width / 2) - x(viewCenter.x)), -(-y(viewCenter.y) + (height / 2)));
+        }
     }
 
     /**
@@ -250,7 +258,9 @@ function Map() {
      * Note: the current view must be 0,0 in order for it to work
      */
     function moveToViewCenter() {
-        ctx.translate((width / 2) - x(viewCenter.x), -y(viewCenter.y) + (height / 2));
+        if (visible) {
+            ctx.translate((width / 2) - x(viewCenter.x), -y(viewCenter.y) + (height / 2));
+        }
     }
 
     /**
@@ -258,6 +268,14 @@ function Map() {
      */
     function updateZoomIndicator() {
         $zoomIndicator.val(zoom);
+    }
+
+    $this.toggleVisibility = function() {
+        if (visible) {
+            $this.hide();
+        } else {
+            $this.show();
+        }
     }
 
     /**
@@ -278,20 +296,34 @@ function Map() {
         //ctx.transform(1, 0, 0, -1, 0, height);
         ctx.translate((width / 2) - x(viewCenter.x), -y(viewCenter.y) + (height / 2));
         $('.control-group.zoom').show();
+        $('.control-group.map .value').addClass('on');
+        $('.container.map .tooltip').hide();
         visible = true;
+        $this.redraw();
+    }
+
+    $this.hide = function() {
+        ctx = undefined;
+        $canvas.off().remove();
+        $('.control-group.zoom').hide();
+        $('.control-group.map .value').removeClass('on');
+        $('.container.map .tooltip').show();
+        visible = false;
     }
 
     /**
      * Redraw the whole map
      */
     $this.redraw = function () {
-        ctx.fillStyle = '#600';
-        ctx.clearRect(x(viewCenter.x) - (width / 2) - 1, y(viewCenter.y) - (height / 2) - 1, width + 2, height + 2);
-        //ctx.fillRect(x(viewCenter.x) - (width/2) + 10, y(viewCenter.y) - (height/2) + 10, width - 20, height - 20);
-        drawAreaBorder();
-        redrawBeacons();
-        redrawTrack();
-        drawWind();
+        if (visible) {
+            ctx.fillStyle = '#600';
+            ctx.clearRect(x(viewCenter.x) - (width / 2) - 1, y(viewCenter.y) - (height / 2) - 1, width + 2, height + 2);
+            //ctx.fillRect(x(viewCenter.x) - (width/2) + 10, y(viewCenter.y) - (height/2) + 10, width - 20, height - 20);
+            drawAreaBorder();
+            redrawBeacons();
+            redrawTrack();
+            drawWind();
+        }
     }
 
     /**

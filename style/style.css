@@ -20,6 +20,10 @@ input {
     width: 100%;
 }
 
+button:hover {
+    cursor: pointer;
+}
+
 .container {
     float: left;
     height: 100%;
@@ -125,6 +129,19 @@ input {
 
 .container.map {
     /*background: #fff;*/
+    position: relative;
+}
+
+.container.map .tooltip {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    margin-top: -18px;
+    width: 100%;
+    text-align: center;
+    color: #ff0;
+    padding: 10px;
+    cursor: pointer;
 }
 
 .heading {

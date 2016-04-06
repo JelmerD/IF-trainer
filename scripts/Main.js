@@ -111,6 +111,8 @@ function Scene() {
                 $('.control-group.hsi-bug .value').focus(); break;
             case 67: //c
                 $('.control-group.hsi-course .value').focus(); break;
+            case 77: //m
+                my.map.toggleVisibility(); break;
             case 83: //s
                 $this.openBeaconSelect(); break;
             case 84: //t

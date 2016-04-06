@@ -70,6 +70,11 @@
         <button class="col1 value" onclick="javascript: my.scene.togglePause()">P</button>
     </div>
 
+    <div class="control-group info map">
+        <div class="label"><span>M</span>ap</div>
+        <button class="col1 value" onclick="javascript: my.map.toggleVisibility();">M</button>
+    </div>
+
     <div class="control-group info station">
         <div class="label"><span>S</span>tation</div>
         <input class="col4 value" type="text" readonly="readonly" onclick="javascript: my.scene.openBeaconSelect();"/>
@@ -111,6 +116,7 @@
         <input class="col2 value" type="number" disabled="disabled"/>
         <button class="col1" onclick="javascript: my.map.zoom(1);">+</button>
     </div>
+    <div class="tooltip" onclick="javascript: my.map.toggleVisibility();">Press &quot;M&quot; to show the map</div>
 </div>
 
 <div class="select" id="beacon-select" onclick="javascript: my.scene.closeBeaconSelect();">
