@@ -8,6 +8,7 @@ var my = {
     scene: undefined,
     instrument: {ai: undefined, hsi: undefined},
     beacon: {},
+    currentBeacon: undefined,
     map: undefined,
     plane: undefined
 };
@@ -104,6 +105,8 @@ function Scene() {
         switch(keyCode) {
             case 27: //esc
                 $this.closeBeaconSelect();
+                $this.closeWindSelect();
+                $this.closeLocationSelect();
                 $(':focus').blur(); break;
             case 80: //p
                 $this.togglePause(); break;
@@ -111,6 +114,8 @@ function Scene() {
                 $('.control-group.hsi-bug .value').focus(); break;
             case 67: //c
                 $('.control-group.hsi-course .value').focus(); break;
+            case 76: // l
+                $this.openLocationSelect(); break;
             case 77: //m
                 my.map.toggleVisibility(); break;
             case 83: //s
@@ -166,8 +171,56 @@ function Scene() {
     $this.selectBeacon = function(value) {
         $this.closeBeaconSelect();
         if (isNumber(value) && beaconIndexes[value - 1] != undefined) {
+            my.currentBeacon = value;
             my.instrument.hsi.updateBeacon(my.beacon[beaconIndexes[value - 1]]);
             $('.info.station .value').val(my.beacon[beaconIndexes[value - 1]].name);
+        }
+    }
+
+    $this.openLocationSelect = function() {
+        $('#location-select').show();
+        $('#location-select input.distance').val('');
+        $('#location-select input.heading').val('');
+        $('#location-select input.radial').val('').focus();
+    }
+
+    $this.closeLocationSelect = function() {
+        $('#location-select').hide();
+    }
+
+    $this.selectLocationRadial = function(value) {
+        if (isNumber(value)) {
+            if (value.length == 3) {
+                my.plane.setBeaconRadial(value);
+                $('#location-select input.distance').focus();
+            }
+        } else {
+            $this.closeLocationSelect();
+        }
+    }
+
+    $this.selectLocationDistance = function(value) {
+        if (isNumber(value)) {
+            if (value.length == 2) {
+                my.plane.setBeaconDistance(value);
+                $('#location-select input.heading').focus();
+            }
+        } else {
+            $this.closeLocationSelect();
+        }
+    }
+
+    $this.selectLocationHeading = function(value) {
+        if (isNumber(value)) {
+            if (value.length == 3) {
+                my.plane.setBeaconHeading(value);
+                my.plane.parseBeaconLocation(my.beacon[beaconIndexes[my.currentBeacon - 1]].pos)
+                my.map.clearTrack();
+                my.plane.clearPositions();
+                $this.closeLocationSelect();
+            }
+        } else {
+            $this.closeLocationSelect();
         }
     }
 

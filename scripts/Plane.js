@@ -8,6 +8,7 @@ function Plane(lat, lon) {
         standardRate: 0,
         halfStandardRate: 0
     };
+    var newBeaconLocation = {radial: undefined, distance: undefined, heading: undefined};
 
 
     // control
@@ -197,6 +198,11 @@ function Plane(lat, lon) {
         $this.onPositionUpdate([$this.posX, $this.posY]);
     };
 
+    $this.clearPositions = function() {
+        $this.positions = [];
+        $this.logPosition();
+    }
+
     $this.toggleAutoTurn = function(hdg) {
         switch (_autoTurn.enabled) {
             case false:
@@ -231,6 +237,25 @@ function Plane(lat, lon) {
         $this.bankAngle = bank;
         $this.pitch = pitch;
         controlUpdate();
+    }
+
+    $this.setBeaconRadial = function(radial) {
+        newBeaconLocation.radial = radial % 360
+    }
+
+    $this.setBeaconDistance = function(distance) {
+        newBeaconLocation.distance = parseInt(distance);
+    }
+
+    $this.setBeaconHeading = function(heading) {
+        newBeaconLocation.heading = heading % 360;
+    }
+
+    $this.parseBeaconLocation = function(beaconPosition) {
+        $this.posX = beaconPosition.x + (Math.cos(toRadians(newBeaconLocation.radial - 90)) * newBeaconLocation.distance);
+        $this.posY = beaconPosition.y - (Math.sin(toRadians(newBeaconLocation.radial - 90)) * newBeaconLocation.distance);
+        $this.heading = newBeaconLocation.heading;
+        newBeaconLocation = {radial: undefined, distance: undefined, heading:undefined};
     }
 
     function autoTurn() {

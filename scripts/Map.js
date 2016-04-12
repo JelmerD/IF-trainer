@@ -380,6 +380,11 @@ function Map() {
         track = positions;
     }
 
+    $this.clearTrack = function() {
+        $this.setTrack([]);
+        $this.redraw();
+    }
+
     /**
      * Append a track coordinate
      *
