@@ -40,9 +40,114 @@ function Scene() {
     var beaconIndexes = [];
 
     /**
+     * Custom keyMap, used for correct usage of methods inside the keyDown and keyUp object
+     *
+     * @type Object
+     */
+    var keyMap = {
+        27: 'esc',
+        37: 'arrow_left',
+        38: 'arrow_up',
+        39: 'arrow_right',
+        40: 'arrow_down',
+        66: 'b',
+        67: 'c',
+        76: 'l',
+        77: 'm',
+        80: 'p',
+        82: 'r',
+        83: 's',
+        84: 't',
+        87: 'w',
+        107: 'num_plus',
+        109: 'num_minus',
+        187: 'pad_plus',
+        189: 'pad_minus',
+    }
+
+    /**
+     * All keyDown events
+     *
+     * @type Object
+     */
+    var keyDown = {
+        arrow_left: function () {
+            my.plane.disableAutoTurn();
+            my.plane.rollLeft();
+            updateInstrumentAI();
+        },
+        arrow_up: function () {
+            my.plane.pitchDown();
+            updateInstrumentAI();
+        },
+        arrow_right: function () {
+            my.plane.disableAutoTurn();
+            my.plane.rollRight();
+            updateInstrumentAI();
+        },
+        arrow_down: function () {
+            my.plane.pitchUp();
+            updateInstrumentAI();
+        },
+    };
+
+    /**
+     * All keyUp events
+     *
+     * @type Object
+     */
+    var keyUp = {
+        esc: function () {
+            $this.closeBeaconSelect();
+            $this.closeWindSelect();
+            $this.closeLocationSelect();
+            $(':focus').blur();
+        },
+        b: function () {
+            $('.control-group.hsi-bug .value').focus();
+        },
+        c: function () {
+            $('.control-group.hsi-course .value').focus();
+        },
+        l: function () {
+            $this.openLocationSelect();
+        },
+        m: function () {
+            my.map.toggleVisibility();
+        },
+        p: function () {
+            $this.togglePause();
+        },
+        r: function () {
+            my.scene.toggleSimulationRate();
+        },
+        s: function () {
+            $this.openBeaconSelect();
+        },
+        t: function () {
+            my.plane.toggleAutoTurn(my.instrument.hsi.getHeadingBug());
+        },
+        w: function () {
+            $this.openWindSelect();
+        },
+        num_plus: function () {
+            my.plane.increaseSpeed();
+        },
+        num_minus: function () {
+            my.plane.decreaseSpeed();
+        },
+        pad_plus: function () {
+            my.plane.increaseSpeed();
+        },
+        pad_minus: function () {
+            my.plane.decreaseSpeed();
+        },
+    };
+
+    /**
      * When the document is ready
      */
-    $(document).ready(function(){
+    $(document).ready(function () {
         initObjects();
         bindKeys();
         timer.toggle();
@@ -63,17 +168,15 @@ function Scene() {
         my.map.moveToLatLon(my.beacon.WDT.lat, my.beacon.WDT.lon);
         $this.selectBeacon(1);
 
-        my.plane.onPositionUpdate = function(position) {
+        my.plane.onPositionUpdate = function (position) {
             my.map.appendTrackPoint(position);
         }
 
         my.plane.onControlUpdate = function() {
-            my.instrument.ai.updatePitch(my.plane.pitch);
-            my.instrument.ai.updateBank(my.plane.bankAngle);
-            my.instrument.ai.draw();
+            updateInstrumentAI();
         }
 
-        my.instrument.hsi.onHeadingBugAdjust = function(hdg) {
+        my.instrument.hsi.onHeadingBugAdjust = function (hdg) {
             my.plane.updateAutoTurn(hdg);
         }
     }
@@ -83,51 +186,26 @@ function Scene() {
      */
     function bindKeys() {
         // keys that can be hold down
-        $(document).on('keydown', function(e){
+        $(document).on('keydown', function (e) {
             //debug('keyDown: ' + e.keyCode);
-            // insert keyDown objects here
-            my.plane.keyDown(e.keyCode);
+            if (keyDown[keyMap[e.keyCode]] != undefined) {
+                keyDown[keyMap[e.keyCode]]();
+            }
         });
 
         // keys that only work 'once'
-        $(document).on('keyup', function(e){
+        $(document).on('keyup', function (e) {
             //debug('keyUp: ' + e.keyCode);
-            // insert keyUp objects here
-            keyUp(e.keyCode);
+            if (keyUp[keyMap[e.keyCode]] != undefined) {
+                keyUp[keyMap[e.keyCode]]();
+            }
         });
     }
 
-    /**
-     * keyUp events for the main trainer
-     *
-     * @param keyCode
-     */
-    function keyUp(keyCode) {
-        switch(keyCode) {
-            case 27: //esc
-                $this.closeBeaconSelect();
-                $this.closeWindSelect();
-                $this.closeLocationSelect();
-                $(':focus').blur(); break;
-            case 80: //p
-                $this.togglePause(); break;
-            case 66: //b
-                $('.control-group.hsi-bug .value').focus(); break;
-            case 67: //c
-                $('.control-group.hsi-course .value').focus(); break;
-            case 76: // l
-                $this.openLocationSelect(); break;
-            case 77: //m
-                my.map.toggleVisibility(); break;
-            case 82: //r
-                my.scene.toggleSimulationRate(); break;
-            case 83: //s
-                $this.openBeaconSelect(); break;
-            case 84: //t
-                my.plane.toggleAutoTurn(my.instrument.hsi.getHeadingBug()); break;
-            case 87: //w
-                $this.openWindSelect(); break;
-        }
+    function updateInstrumentAI() {
+        my.instrument.ai.updatePitch(my.plane.pitch);
+        my.instrument.ai.updateBank(my.plane.bankAngle);
+        my.instrument.ai.draw();
     }
 
     /**
@@ -141,7 +219,7 @@ function Scene() {
         my.map.appendBeacon(my.beacon[id]);
     }
 
-    $this.togglePause = function() {
+    $this.togglePause = function () {
         timer.toggle();
         if (timer.isRunning()) {
             my.scene.toggleSimulationRate(1);
@@ -150,7 +228,7 @@ function Scene() {
         }
     }
 
-    $this.toggleSimulationRate = function(value) {
+    $this.toggleSimulationRate = function (value) {
         var max = 8; // must be a power of 2
         if (!timer.isRunning()) {
             timer.toggle();
@@ -168,14 +246,14 @@ function Scene() {
         $('.control-group.simulation-rate .value').text(my.simulationRate + 'x');
     }
 
-    $this.openBeaconSelect = function() {
+    $this.openBeaconSelect = function () {
         if ($('#beacon-select ul').html() == '') {
             var n = beaconIndexes.length, i = -1;
             while (++i, i < n) {
                 var h = $('<li></li>').html((i + 1) + '. ' + my.beacon[beaconIndexes[i]].name).attr({
                     'data-id': i + 1
                 });
-                h.on('click', function() {
+                h.on('click', function () {
                     $this.selectBeacon($(this).attr('data-id'));
                 });
                 $('#beacon-select ul').append(h);
@@ -185,11 +263,11 @@ function Scene() {
         $('#beacon-select input').val('').focus();
     }
 
-    $this.closeBeaconSelect = function() {
+    $this.closeBeaconSelect = function () {
         $('#beacon-select').hide();
     }
 
-    $this.selectBeacon = function(value) {
+    $this.selectBeacon = function (value) {
         $this.closeBeaconSelect();
         if (isNumber(value) && beaconIndexes[value - 1] != undefined) {
             my.currentBeacon = value;
@@ -198,18 +276,18 @@ function Scene() {
         }
     }
 
-    $this.openLocationSelect = function() {
+    $this.openLocationSelect = function () {
         $('#location-select').show();
         $('#location-select input.distance').val('');
         $('#location-select input.heading').val('');
         $('#location-select input.radial').val('').focus();
     }
 
-    $this.closeLocationSelect = function() {
+    $this.closeLocationSelect = function () {
         $('#location-select').hide();
     }
 
-    $this.selectLocationRadial = function(value) {
+    $this.selectLocationRadial = function (value) {
         if (isNumber(value)) {
             if (value.length == 3) {
                 my.plane.setBeaconRadial(value);
@@ -220,7 +298,7 @@ function Scene() {
         }
     }
 
-    $this.selectLocationDistance = function(value) {
+    $this.selectLocationDistance = function (value) {
         if (isNumber(value)) {
             if (value.length == 2) {
                 my.plane.setBeaconDistance(value);
@@ -231,7 +309,7 @@ function Scene() {
         }
     }
 
-    $this.selectLocationHeading = function(value) {
+    $this.selectLocationHeading = function (value) {
         if (isNumber(value)) {
             if (value.length == 3) {
                 my.plane.setBeaconHeading(value);
@@ -245,17 +323,17 @@ function Scene() {
         }
     }
 
-    $this.openWindSelect = function() {
+    $this.openWindSelect = function () {
         $('#wind-select').show();
         $('#wind-select input.velocity').val('');
         $('#wind-select input.direction').val('').focus();
     }
 
-    $this.closeWindSelect = function() {
+    $this.closeWindSelect = function () {
         $('#wind-select').hide();
     }
 
-    $this.selectWindDirection = function(value) {
+    $this.selectWindDirection = function (value) {
         if (isNumber(value)) {
             if (value.length == 3) {
                 my.plane.windDirection = value % 360;
@@ -267,7 +345,7 @@ function Scene() {
         }
     }
 
-    $this.selectWindVelocity = function(value) {
+    $this.selectWindVelocity = function (value) {
         if (isNumber(value)) {
             if (value.length == 2) {
                 my.plane.windVelocity = parseInt(value);
@@ -294,7 +372,7 @@ function Scene() {
      *
      * This method is called by the Timer object itself
      */
-    timer.onTick = function() {
+    timer.onTick = function () {
         my.plane.timerTick();
         my.instrument.hsi.updateHeading(my.plane.heading);
         my.instrument.hsi.updatePlane(my.plane);
@@ -334,7 +412,7 @@ function Timer() {
      * Toggle the timer
      * Starts when off, stops when running
      */
-    $this.toggle = function() {
+    $this.toggle = function () {
         if (!running) {
             start();
         } else {
@@ -347,7 +425,7 @@ function Timer() {
      *
      * @returns {string}
      */
-    $this.getElapsedTime = function() {
+    $this.getElapsedTime = function () {
         var h = Math.floor(elapsed / (60 * 60 * 1000)),
             m = Math.floor(elapsed / (60 * 1000)) % 60,
             s = Math.floor(elapsed / 1000) % 60,
@@ -361,7 +439,7 @@ function Timer() {
      *
      * @returns {boolean}
      */
-    $this.isRunning = function() {
+    $this.isRunning = function () {
         return running;
     }
 
@@ -385,13 +463,14 @@ function Timer() {
     /**
      * On a timer tick
      */
-    function tick () {
+    function tick() {
         elapsed += (1000 * my.simulationRate) / FRAME_RATE;
         $this.onTick();
     }
 
     // callback
-    $this.onTick = function(){};
+    $this.onTick = function () {
+    };
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -422,7 +501,7 @@ var FRAME_RATE = 24;
  * @param angle
  * @returns {number}
  */
-function toRadians (angle) {
+function toRadians(angle) {
     return angle * PI_RATIO;
 }
 
@@ -432,7 +511,7 @@ function toRadians (angle) {
  * @param angle
  * @returns {number}
  */
-function toDegrees (angle) {
+function toDegrees(angle) {
     return angle / PI_RATIO;
 }
 
@@ -455,7 +534,7 @@ function pad(size, value) {
  * @returns {{x: number, y: *}}
  */
 function coordinateToNauticalMile(lat, lon) {
-    return {x: Math.cos(toRadians(lat[0])) * ((lon[0] * 60) + lon[1]), y:(lat[0] * 60) + lat[1]};
+    return {x: Math.cos(toRadians(lat[0])) * ((lon[0] * 60) + lon[1]), y: (lat[0] * 60) + lat[1]};
 }
 
 /**

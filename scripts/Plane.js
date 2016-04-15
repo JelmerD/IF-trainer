@@ -212,7 +212,7 @@ function Plane(lat, lon) {
                 enableAutoTurn(_autoTurn.standardRate, 'standard rate');
                 break;
             case _autoTurn.standardRate:
-                disableAutoTurn();
+                $this.disableAutoTurn();
                 break;
         }
     };
@@ -222,7 +222,7 @@ function Plane(lat, lon) {
         $('.info.auto-turn .value').html(t).addClass('on');
     }
 
-    function disableAutoTurn() {
+    $this.disableAutoTurn = function() {
         _autoTurn.enabled = false;
         $('.info.auto-turn .value').html('off').removeClass('on');
     }
@@ -233,7 +233,7 @@ function Plane(lat, lon) {
     }
 
     $this.setAttitude = function(bank, pitch) {
-        disableAutoTurn();
+        $this.disableAutoTurn();
         $this.bankAngle = bank;
         $this.pitch = pitch;
         controlUpdate();
@@ -312,31 +312,7 @@ function Plane(lat, lon) {
         $this.calcPosition();
     }
 
-    $this.keyDown = function(keyCode) {
-        switch(keyCode) {
-            case 37: // arrow left
-                disableAutoTurn();
-                $this.rollLeft(); break;
-            case 38: // arrow up
-                $this.pitchDown(); break;
-            case 39: // arrow right
-                disableAutoTurn();
-                $this.rollRight(); break;
-            case 40: // arrow down
-                $this.pitchUp(); break;
-            case 107: // plus numbers
-            case 187: // plus numpad
-                $this.increaseSpeed(); break;
-            case 109: // min numbers
-            case 189: // min numpad
-                $this.decreaseSpeed(); break;
-        }
-
-        $this.onKeyPressed(keyCode);
-    }
-
     // callbacks
-    $this.onKeyPressed = function(keyCode) {};
     $this.onControlUpdate = function(){};
     $this.onPositionUpdate = function(position) {};
 
