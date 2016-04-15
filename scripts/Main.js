@@ -14,6 +14,8 @@ var my = {
     simulationRate: 1
 };
 
+var elem = {};
+
 /**
  * The main object
  *
@@ -145,13 +147,32 @@ function Scene() {
     };
 
     /**
+     * Wind parameters
+     *
+     * @type {{direction: number, velocity: number}}
+     */
+    $this.wind = {
+        direction: 0,
+        velocity: 0
+    }
+
+    /**
      * When the document is ready
      */
     $(document).ready(function () {
+        initElements();
         initObjects();
         bindKeys();
         timer.toggle();
     });
+
+    function initElements() {
+        elem = {
+            wind: {
+                control: $('.control-group.wind .value')
+            }
+        };
+    }
 
     /**
      * Initialize all the objects
@@ -203,8 +224,8 @@ function Scene() {
     }
 
     function updateInstrumentAI() {
-        my.instrument.ai.updatePitch(my.plane.pitch);
-        my.instrument.ai.updateBank(my.plane.bankAngle);
+        my.instrument.ai.updatePitch(my.plane.param('pitch'));
+        my.instrument.ai.updateBank(my.plane.param('bankAngle'));
         my.instrument.ai.draw();
     }
 
@@ -336,7 +357,7 @@ function Scene() {
     $this.selectWindDirection = function (value) {
         if (isNumber(value)) {
             if (value.length == 3) {
-                my.plane.windDirection = value % 360;
+                $this.wind.direction = parseInt(value) % 360;
                 updateWindControl();
                 $('#wind-select input.velocity').focus();
             }
@@ -348,7 +369,7 @@ function Scene() {
     $this.selectWindVelocity = function (value) {
         if (isNumber(value)) {
             if (value.length == 2) {
-                my.plane.windVelocity = parseInt(value);
+                $this.wind.velocity = parseInt(value);
                 updateWindControl();
                 $this.closeWindSelect();
             }
@@ -358,13 +379,13 @@ function Scene() {
     }
 
     function updateWindControl() {
-        if (my.plane.windVelocity == 0) {
-            $('.control-group.wind .value').removeClass('on');
+        if ($this.wind.velocity == 0) {
+            elem.wind.control.removeClass('on');
         } else {
-            $('.control-group.wind .value').addClass('on');
+            elem.wind.control.addClass('on');
         }
-        $('.control-group.wind .value').text(pad(3, my.plane.windDirection) + ' / ' + pad(2, my.plane.windVelocity));
-        my.map.setWind(my.plane.windDirection, my.plane.windVelocity);
+        elem.wind.control.text(pad(3, $this.wind.direction) + ' / ' + pad(2, $this.wind.velocity));
+        my.map.setWind($this.wind.direction, $this.wind.velocity);
     }
 
     /**
@@ -374,16 +395,17 @@ function Scene() {
      */
     timer.onTick = function () {
         my.plane.timerTick();
-        my.instrument.hsi.updateHeading(my.plane.heading);
+        my.instrument.hsi.updateHeading(my.plane.param('heading'));
         my.instrument.hsi.updatePlane(my.plane);
         my.instrument.hsi.timerTick();
 
+        // directy debug stuff
         $('#debug tr.stopwatch td.value').text(timer.getElapsedTime());
-        $('#debug tr.kias td.value').text(my.plane.indicatedAirspeed);
-        $('#debug tr.vtas td.value').text(Math.round(my.plane.trueAirspeed));
-        $('#debug tr.vv td.value').text(my.plane.verticalVelocity);
-        $('#debug tr.alt td.value').text(Math.round(my.plane.altitude));
-        $('#debug tr.turn-rate td.value').text(my.plane.turnRate);
+        $('#debug tr.kias td.value').text(my.plane.param('indicatedAirspeed'));
+        $('#debug tr.vtas td.value').text(Math.round(my.plane.param('trueAirspeed')));
+        $('#debug tr.vv td.value').text(my.plane.param('verticalVelocity'));
+        $('#debug tr.alt td.value').text(Math.round(my.plane.param('altitude')));
+        $('#debug tr.turn-rate td.value').text(my.plane.param('turnRate'));
         $('.info.dme .value').text(my.instrument.hsi.getBeaconToPlaneDistance().toFixed(1));
         $('.info.relative-speed .value').text(Math.round(my.instrument.hsi.getBeaconToPlaneSpeed()));
 

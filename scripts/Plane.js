@@ -1,6 +1,5 @@
 function Plane(lat, lon) {
     var $this = this;
-    var _pos = coordinateToNauticalMile(lat, lon);
     var _autoTurn = {
         enabled: false, // false, 1 = half standard, 2 = standard
         targetHeading: 0,
@@ -10,53 +9,49 @@ function Plane(lat, lon) {
     };
     var newBeaconLocation = {radial: undefined, distance: undefined, heading: undefined};
 
+    var _param = {
+        indicatedAirspeed: 180,
+        pitch: 0,
+        bankAngle: 0,
+        trueAirspeed: 0,
+        fakeGroundSpeed: 0,
+        verticalVelocity: 0,
+        altitude: 6000,
+        turnRate: 0,
+        heading: 0,
+        trueTrack: 0,
+        groundSpeed: 0,
+    };
 
-    // control
-    $this.indicatedAirspeed = 180;  //kias
-    $this.pitch = 0;                //degrees
-    $this.bankAngle = 0;            //degrees
-
-    // performance
-    $this.trueAirspeed = 0;         //kts
-    $this.fakeGroundSpeed = 0;      //kts
-    $this.verticalVelocity = 0;     //feet/min
-    $this.altitude = 6000;          //feet
-    $this.turnRate = 0;             //deg/sec
-    $this.heading = 0;              //degrees
-    $this.trueTrack = 0;            //degrees
-    $this.groundSpeed = 0;
-    $this.posX = _pos.x;                 //nautical mile
-    $this.posY = _pos.y;                 //nautical mile.
-
-    // wind (we need that here for calculations)
-    $this.windVelocity = 0;         //kts
-    $this.windDirection = 0;        //where it is blowing from
-
-    // increments used for control inputs
-    $this.increments = {
+    var _increments = {
         pitch: 1,
         bankAngle: 1,
         indicatedAirspeed: 5,
     };
 
-    // certain limits for the aircraft
-    $this.limits = {
+    var _limits = {
         pitch: [-15, 20],
         bankAngle: [-45, 45],
         indicatedAirspeed: [60, 260],
         altitude: [0, 25000]
     };
 
+    $this.pos = coordinateToNauticalMile(lat, lon);
+
     // position log
     $this.positions = [];
+
+    $this.param = function(v) {
+        return _param[v];
+    };
 
     /**
      * Roll the a/c to the right
      */
     $this.rollRight = function() {
-        $this.bankAngle = $this.bankAngle + $this.increments.bankAngle;
-        if ($this.bankAngle > $this.limits.bankAngle[1]) {
-            $this.bankAngle = $this.limits.bankAngle[1]
+        _param.bankAngle = _param.bankAngle + _increments.bankAngle;
+        if (_param.bankAngle > _limits.bankAngle[1]) {
+            _param.bankAngle = _limits.bankAngle[1]
         }
         controlUpdate();
     };
@@ -65,9 +60,9 @@ function Plane(lat, lon) {
      * Roll the a/c to the left
      */
     $this.rollLeft = function() {
-        $this.bankAngle = $this.bankAngle - $this.increments.bankAngle;
-        if ($this.bankAngle < $this.limits.bankAngle[0]) {
-            $this.bankAngle = $this.limits.bankAngle[0]
+        _param.bankAngle = _param.bankAngle - _increments.bankAngle;
+        if (_param.bankAngle < _limits.bankAngle[0]) {
+            _param.bankAngle = _limits.bankAngle[0]
         }
         controlUpdate();
     };
@@ -76,9 +71,9 @@ function Plane(lat, lon) {
      * Pitch the a/c up
      */
     $this.pitchUp = function() {
-        $this.pitch = $this.pitch + $this.increments.pitch;
-        if ($this.pitch > $this.limits.pitch[1]) {
-            $this.pitch = $this.limits.pitch[1]
+        _param.pitch = _param.pitch + _increments.pitch;
+        if (_param.pitch > _limits.pitch[1]) {
+            _param.pitch = _limits.pitch[1]
         }
         controlUpdate();
     };
@@ -87,9 +82,9 @@ function Plane(lat, lon) {
      * Pitch the a/c down
      */
     $this.pitchDown = function() {
-        $this.pitch = $this.pitch - $this.increments.pitch;
-        if ($this.pitch < $this.limits.pitch[0]) {
-            $this.pitch = $this.limits.pitch[0]
+        _param.pitch = _param.pitch - _increments.pitch;
+        if (_param.pitch < _limits.pitch[0]) {
+            _param.pitch = _limits.pitch[0]
         }
         controlUpdate();
     };
@@ -98,9 +93,9 @@ function Plane(lat, lon) {
      * Increase the a/c speed (KIAS)
      */
     $this.increaseSpeed = function() {
-        $this.indicatedAirspeed = $this.indicatedAirspeed + $this.increments.indicatedAirspeed;
-        if ($this.indicatedAirspeed > $this.limits.indicatedAirspeed[1]) {
-            $this.indicatedAirspeed = $this.limits.indicatedAirspeed[1]
+        _param.indicatedAirspeed = _param.indicatedAirspeed + _increments.indicatedAirspeed;
+        if (_param.indicatedAirspeed > _limits.indicatedAirspeed[1]) {
+            _param.indicatedAirspeed = _limits.indicatedAirspeed[1]
         }
         controlUpdate();
     };
@@ -109,9 +104,9 @@ function Plane(lat, lon) {
      * Decrease the a/c speed (KIAS)
      */
     $this.decreaseSpeed = function() {
-        $this.indicatedAirspeed = $this.indicatedAirspeed - $this.increments.indicatedAirspeed;
-        if ($this.indicatedAirspeed < $this.limits.indicatedAirspeed[0]) {
-            $this.indicatedAirspeed = $this.limits.indicatedAirspeed[0]
+        _param.indicatedAirspeed = _param.indicatedAirspeed - _increments.indicatedAirspeed;
+        if (_param.indicatedAirspeed < _limits.indicatedAirspeed[0]) {
+            _param.indicatedAirspeed = _limits.indicatedAirspeed[0]
         }
         controlUpdate();
     };
@@ -120,14 +115,14 @@ function Plane(lat, lon) {
      * Calculate the True Airspeed
      */
     $this.calcTrueAirspeed = function() {
-        $this.trueAirspeed = $this.indicatedAirspeed + (($this.altitude / 1000) * 0.02) * $this.indicatedAirspeed;
+        _param.trueAirspeed = _param.indicatedAirspeed + ((_param.altitude / 1000) * 0.02) * _param.indicatedAirspeed;
     };
 
     /**
      * Calculate the Ground Speed
      */
     $this.calcFakeGroundSpeed = function() {
-        $this.fakeGroundSpeed = Math.cos(toRadians($this.pitch)) * $this.trueAirspeed;
+        _param.fakeGroundSpeed = Math.cos(toRadians(_param.pitch)) * _param.trueAirspeed;
     };
 
     /**
@@ -135,21 +130,21 @@ function Plane(lat, lon) {
      */
     $this.calcVerticalVelocity = function() {
         // TODO for now we are going to use this
-        $this.verticalVelocity = $this.pitch * 250;
+        _param.verticalVelocity = _param.pitch * 250;
     };
 
     /**
      * Calculate the altitude
      */
     $this.calcAltitude = function() {
-        $this.altitude += ((($this.verticalVelocity / 60) * my.simulationRate) / FRAME_RATE);
-        if ($this.altitude < $this.limits.altitude[0]) {
-            $this.pitch = 0;
-            $this.altitude = 0;
+        _param.altitude += (((_param.verticalVelocity / 60) * my.simulationRate) / FRAME_RATE);
+        if (_param.altitude < _limits.altitude[0]) {
+            _param.pitch = 0;
+            _param.altitude = 0;
         }
-        else if ($this.altitude > $this.limits.altitude[1]) {
-            $this.pitch = 0;
-            $this.altitude = $this.limits.altitude[1];
+        else if (_param.altitude > _limits.altitude[1]) {
+            _param.pitch = 0;
+            _param.altitude = _limits.altitude[1];
         }
     };
 
@@ -157,45 +152,45 @@ function Plane(lat, lon) {
      * Calculate the turn rate
      */
     $this.calcTurnRate = function() {
-        $this.turnRate = (1091 * Math.tan(toRadians($this.bankAngle))) / $this.trueAirspeed;
-        $this.turnRate = Math.round($this.turnRate * 1e2) / 1e2;
-        _autoTurn.halfStandardRate = ($this.trueAirspeed / 20) + 5;
-        _autoTurn.standardRate = ($this.trueAirspeed / 10) + 8;
+        _param.turnRate = (1091 * Math.tan(toRadians(_param.bankAngle))) / _param.trueAirspeed;
+        _param.turnRate = Math.round(_param.turnRate * 1e2) / 1e2;
+        _autoTurn.halfStandardRate = (_param.trueAirspeed / 20) + 5;
+        _autoTurn.standardRate = (_param.trueAirspeed / 10) + 8;
     }
 
     /**
      * calculate the heading
      */
     $this.calcHeading = function() {
-        $this.heading += ($this.turnRate * my.simulationRate) / FRAME_RATE;
-        if ($this.heading < 0 && $this.turnRate < 0) {
-            $this.heading += 360;
+        _param.heading += (_param.turnRate * my.simulationRate) / FRAME_RATE;
+        if (_param.heading < 0 && _param.turnRate < 0) {
+            _param.heading += 360;
         }
-        else if ($this.heading >= 360 && $this.turnRate > 0) {
-            $this.heading -= 360;
+        else if (_param.heading >= 360 && _param.turnRate > 0) {
+            _param.heading -= 360;
         }
     };
 
     $this.calcPosition = function() {
         // convert the headings to radians for sin/cos calc
-        var hdgRadians = toRadians($this.heading);
-        var windRadians = toRadians($this.windDirection - 180);
+        var hdgRadians = toRadians(_param.heading);
+        var windRadians = toRadians(my.scene.wind.direction - 180);
         // calculate the X delta
-        var planeX = Math.round((Math.sin(hdgRadians) * ($this.fakeGroundSpeed / 3600)) * 1e3) / 1e3;
-        var windX = Math.round((Math.sin(windRadians) * ($this.windVelocity / 3600)) * 1e3) / 1e3;
-        $this.posX += ((planeX + windX) * my.simulationRate) / FRAME_RATE;
+        var planeX = Math.round((Math.sin(hdgRadians) * (_param.fakeGroundSpeed / 3600)) * 1e3) / 1e3;
+        var windX = Math.round((Math.sin(windRadians) * (my.scene.wind.velocity / 3600)) * 1e3) / 1e3;
+        $this.pos.x += ((planeX + windX) * my.simulationRate) / FRAME_RATE;
         // calculate the Y delta
-        var planeY = Math.round((Math.cos(hdgRadians) * ($this.fakeGroundSpeed / 3600)) * 1e3) / 1e3;
-        var windY = Math.round((Math.cos(windRadians) * ($this.windVelocity / 3600)) * 1e3) / 1e3;
-        $this.posY += ((planeY + windY) * my.simulationRate) / FRAME_RATE;
+        var planeY = Math.round((Math.cos(hdgRadians) * (_param.fakeGroundSpeed / 3600)) * 1e3) / 1e3;
+        var windY = Math.round((Math.cos(windRadians) * (my.scene.wind.velocity / 3600)) * 1e3) / 1e3;
+        $this.pos.y += ((planeY + windY) * my.simulationRate) / FRAME_RATE;
     };
 
     /**
      * Log one position
      */
     $this.logPosition = function() {
-        $this.positions.push([$this.posX, $this.posY]);
-        $this.onPositionUpdate([$this.posX, $this.posY]);
+        $this.positions.push([$this.pos.x, $this.pos.y]);
+        $this.onPositionUpdate([$this.pos.x, $this.pos.y]);
     };
 
     $this.clearPositions = function() {
@@ -234,8 +229,8 @@ function Plane(lat, lon) {
 
     $this.setAttitude = function(bank, pitch) {
         $this.disableAutoTurn();
-        $this.bankAngle = bank;
-        $this.pitch = pitch;
+        _param.bankAngle = bank;
+        _param.pitch = pitch;
         controlUpdate();
     }
 
@@ -252,14 +247,14 @@ function Plane(lat, lon) {
     }
 
     $this.parseBeaconLocation = function(beaconPosition) {
-        $this.posX = beaconPosition.x + (Math.cos(toRadians(newBeaconLocation.radial - 90)) * newBeaconLocation.distance);
-        $this.posY = beaconPosition.y - (Math.sin(toRadians(newBeaconLocation.radial - 90)) * newBeaconLocation.distance);
-        $this.heading = newBeaconLocation.heading;
+        $this.pos.x = beaconPosition.x + (Math.cos(toRadians(newBeaconLocation.radial - 90)) * newBeaconLocation.distance);
+        $this.pos.y = beaconPosition.y - (Math.sin(toRadians(newBeaconLocation.radial - 90)) * newBeaconLocation.distance);
+        _param.heading = newBeaconLocation.heading;
         newBeaconLocation = {radial: undefined, distance: undefined, heading:undefined};
     }
 
     function autoTurn() {
-        var diff = calcHeadingDiff($this.heading, _autoTurn.targetHeading);
+        var diff = calcHeadingDiff(_param.heading, _autoTurn.targetHeading);
         if (diff < -.01) {
             _autoTurn.targetBankAngle = -Math.round(_autoTurn.enabled);
             if (diff > _autoTurn.targetBankAngle / 3) {
@@ -273,9 +268,9 @@ function Plane(lat, lon) {
         } else {
             _autoTurn.targetBankAngle = 0;
         }
-        if ($this.bankAngle < _autoTurn.targetBankAngle) {
+        if (_param.bankAngle < _autoTurn.targetBankAngle) {
             $this.rollRight();
-        } else if ($this.bankAngle > _autoTurn.targetBankAngle) {
+        } else if (_param.bankAngle > _autoTurn.targetBankAngle) {
             $this.rollLeft();
         }
     }

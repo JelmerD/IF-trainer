@@ -107,11 +107,11 @@ function HSI() {
 
     function calcBeaconToPlane() {
         if (plane != undefined && beacon != undefined) {
-            var x = plane.posX - beacon.pos.x,
-                y = plane.posY - beacon.pos.y,
-                d = beacon.pos.x <= plane.posX ? 90 : 270;
+            var x = plane.pos.x - beacon.pos.x,
+                y = plane.pos.y - beacon.pos.y,
+                d = beacon.pos.x <= plane.pos.x ? 90 : 270;
             beaconToPlane.bearing = -toDegrees(Math.atan(y / x)) + d;
-            var distance = Math.sqrt(Math.pow(x,2) + Math.pow(y,2) + Math.pow(plane.altitude * 0.0001645,2));
+            var distance = Math.sqrt(Math.pow(x,2) + Math.pow(y,2) + Math.pow(plane.param('altitude') * 0.0001645,2));
             beaconToPlane.speed = (Math.abs(beaconToPlane.distance - distance) * 3600 * FRAME_RATE) / my.simulationRate;
             beaconToPlane.distance = distance;
         }
