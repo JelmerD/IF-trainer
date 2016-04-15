@@ -10,7 +10,8 @@ var my = {
     beacon: {},
     currentBeacon: undefined,
     map: undefined,
-    plane: undefined
+    plane: undefined,
+    simulationRate: 1
 };
 
 /**
@@ -118,6 +119,8 @@ function Scene() {
                 $this.openLocationSelect(); break;
             case 77: //m
                 my.map.toggleVisibility(); break;
+            case 82: //r
+                my.scene.toggleSimulationRate(); break;
             case 83: //s
                 $this.openBeaconSelect(); break;
             case 84: //t
@@ -141,10 +144,28 @@ function Scene() {
     $this.togglePause = function() {
         timer.toggle();
         if (timer.isRunning()) {
-            $('.info.pause .value').removeClass('on');
+            my.scene.toggleSimulationRate(1);
         } else {
-            $('.info.pause .value').addClass('on');
+            $('.control-group.simulation-rate .value').text('paused');
         }
+    }
+
+    $this.toggleSimulationRate = function(value) {
+        var max = 8; // must be a power of 2
+        if (!timer.isRunning()) {
+            timer.toggle();
+            value = 1;
+        }
+        if (value === undefined) {
+            if (my.simulationRate == max) {
+                my.simulationRate = 1;
+            } else {
+                my.simulationRate *= 2;
+            }
+        } else {
+            my.simulationRate = value;
+        }
+        $('.control-group.simulation-rate .value').text(my.simulationRate + 'x');
     }
 
     $this.openBeaconSelect = function() {
@@ -365,7 +386,7 @@ function Timer() {
      * On a timer tick
      */
     function tick () {
-        elapsed += 1000 / FRAME_RATE;
+        elapsed += (1000 * my.simulationRate) / FRAME_RATE;
         $this.onTick();
     }
 

@@ -110,9 +110,12 @@ button:hover {
     width: 100%;
 }
 
-.control-group button.value {
-    color: #A70606;
+.control-group button {
     font-weight: bold;
+}
+
+.control-group button.value.colored {
+    color: #A70606;
 }
 
 .control-group button.value.on {

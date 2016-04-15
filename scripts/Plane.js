@@ -142,7 +142,7 @@ function Plane(lat, lon) {
      * Calculate the altitude
      */
     $this.calcAltitude = function() {
-        $this.altitude = $this.altitude + (($this.verticalVelocity / 60) / FRAME_RATE);
+        $this.altitude += ((($this.verticalVelocity / 60) * my.simulationRate) / FRAME_RATE);
         if ($this.altitude < $this.limits.altitude[0]) {
             $this.pitch = 0;
             $this.altitude = 0;
@@ -167,7 +167,7 @@ function Plane(lat, lon) {
      * calculate the heading
      */
     $this.calcHeading = function() {
-        $this.heading += $this.turnRate / FRAME_RATE;
+        $this.heading += ($this.turnRate * my.simulationRate) / FRAME_RATE;
         if ($this.heading < 0 && $this.turnRate < 0) {
             $this.heading += 360;
         }
@@ -183,11 +183,11 @@ function Plane(lat, lon) {
         // calculate the X delta
         var planeX = Math.round((Math.sin(hdgRadians) * ($this.fakeGroundSpeed / 3600)) * 1e3) / 1e3;
         var windX = Math.round((Math.sin(windRadians) * ($this.windVelocity / 3600)) * 1e3) / 1e3;
-        $this.posX += (planeX + windX) / FRAME_RATE;
+        $this.posX += ((planeX + windX) * my.simulationRate) / FRAME_RATE;
         // calculate the Y delta
         var planeY = Math.round((Math.cos(hdgRadians) * ($this.fakeGroundSpeed / 3600)) * 1e3) / 1e3;
         var windY = Math.round((Math.cos(windRadians) * ($this.windVelocity / 3600)) * 1e3) / 1e3;
-        $this.posY += (planeY + windY) / FRAME_RATE;
+        $this.posY += ((planeY + windY) * my.simulationRate) / FRAME_RATE;
     };
 
     /**
@@ -298,7 +298,7 @@ function Plane(lat, lon) {
 
         $this.calc();
 
-        frame = frame % FRAME_RATE;
+        frame = frame % Math.floor(FRAME_RATE / my.simulationRate);
         if (frame == 0) {
             $this.logPosition();
         }

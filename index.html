@@ -64,15 +64,19 @@
 </div>
 <div class="container controls">
 
-
-    <div class="control-group info pause">
-        <div class="label"><span>P</span>ause</div>
-        <button class="col1 value" onclick="javascript: my.scene.togglePause()">P</button>
+    <div class="control-group info simulation-rate" title="Speed up or slow down the simulation rate">
+        <div class="label"><span>R</span>ate</div>
+        <button class="col3 value" onclick="javascript: my.scene.toggleSimulationRate()">
+            1x
+        </button>
+        <button class="col1" onclick="javascript: my.scene.togglePause();">
+            P
+        </button>
     </div>
 
     <div class="control-group info map">
         <div class="label"><span>M</span>ap</div>
-        <button class="col1 value" onclick="javascript: my.map.toggleVisibility();">M</button>
+        <button class="col1 value colored" onclick="javascript: my.map.toggleVisibility();">M</button>
     </div>
 
     <div class="control-group info station">
@@ -99,14 +103,14 @@
 
     <div class="control-group info auto-turn">
         <div class="label"><span>T</span>urn</div>
-        <button class="col4 value" onclick="javascript: my.plane.toggleAutoTurn(my.instrument.hsi.getHeadingBug())">
+        <button class="col4 value colored" onclick="javascript: my.plane.toggleAutoTurn(my.instrument.hsi.getHeadingBug())">
             off
         </button>
     </div>
 
     <div class="control-group wind">
         <div class="label"><span>W</span>ind</div>
-        <button class="value col4" onclick="javascript: my.scene.openWindSelect();">000 / 00</button>
+        <button class="value col4 colored" onclick="javascript: my.scene.openWindSelect();">000 / 00</button>
     </div>
 
 </div>
