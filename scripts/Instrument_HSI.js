@@ -42,6 +42,7 @@ function HSI() {
         outer: new Image(),
         bearing: new Image(),
         compass: new Image(),
+        plane: new Image(),
         course: new Image(),
         cdi: new Image(),
         bug: new Image(),
@@ -54,6 +55,9 @@ function HSI() {
         images.compass.src = 'images/hsi-compass.svg';
     }
     images.compass.onload = function() {
+        images.plane.src = 'images/hsi-plane.svg';
+    }
+    images.plane.onload = function() {
         images.course.src = 'images/hsi-course.svg';
     }
     images.course.onload = function() {
@@ -73,6 +77,7 @@ function HSI() {
             drawRotatedImage(images.outer, 200, 200, 0);
             drawRotatedImage(images.bearing, 200, 200, -heading + beaconToPlane.bearing + 180);
             drawRotatedImage(images.compass, 200, 200, -heading);
+            drawRotatedImage(images.plane, 200, 200, 0);
             drawRotatedImage(images.course, 200, 200, -heading + course);
             drawRotatedImage(images.cdi, 200 - (deviation * 9), 200, -heading + course);
             drawRotatedImage(images.bug, 200, 200, -heading + bug);
