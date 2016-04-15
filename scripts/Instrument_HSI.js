@@ -21,85 +21,89 @@ function HSI() {
         return (x / 400) * size;
     }
 
-    $this.updateHeading = function(x) {
+    $this.updateHeading = function (x) {
         heading = x;
     }
 
-    $this.updatePlane = function(p) {
+    $this.updatePlane = function (p) {
         plane = p;
     }
 
-    $this.updateBeacon = function(b) {
+    $this.updateBeacon = function (b) {
         beacon = b;
     }
 
-    $this.timerTick = function() {
+    $this.timerTick = function () {
         calcBeaconToPlane(FRAME_RATE);
         calcDeviation();
     }
 
     var images = {
-        outer: new Image(),
-        bearing: new Image(),
-        compass: new Image(),
-        plane: new Image(),
-        to: new Image(),
-        from: new Image(),
-        course: new Image(),
-        cdi: new Image(),
-        bug: new Image(),
+        outer: {
+            src: 'images/hsi-outer.svg',
+        },
+        bearing: {
+            src: 'images/hsi-bearingpointer.svg',
+        },
+        compass: {
+            src: 'images/hsi-compass.svg',
+        },
+        plane: {
+            src: 'images/hsi-plane.svg',
+        },
+        to: {
+            src: 'images/hsi-to.svg',
+        },
+        from: {
+            src: 'images/hsi-from.svg',
+        },
+        course: {
+            src: 'images/hsi-course.svg',
+        },
+        cdi: {
+            src: 'images/hsi-cdi.svg',
+        },
+        bug: {
+            src: 'images/hsi-headingbug.svg',
+        },
     };
 
-    images.outer.onload = function() {
-        images.bearing.src = 'images/hsi-bearingpointer.svg';
-    }
-    images.bearing.onload = function() {
-        images.compass.src = 'images/hsi-compass.svg';
-    }
-    images.compass.onload = function() {
-        images.plane.src = 'images/hsi-plane.svg';
-    }
-    images.plane.onload = function() {
-        images.to.src = 'images/hsi-to.svg';
-    }
-    images.to.onload = function() {
-        images.from.src = 'images/hsi-from.svg';
-    }
-    images.from.onload = function() {
-        images.course.src = 'images/hsi-course.svg';
-    }
-    images.course.onload = function() {
-        images.cdi.src = 'images/hsi-cdi.svg';
-    }
-    images.cdi.onload = function() {
-        images.bug.src = 'images/hsi-headingbug.svg';
-    }
-    images.bug.onload = function() {
-        ready = true;
-        $this.draw();
-    }
-    images.outer.src = 'images/hsi-outer.svg';
-
-    $this.draw = function() {
-        if (ready) {
-            drawRotatedImage(images.outer, 200, 200, 0);
-            drawRotatedImage(images.bearing, 200, 200, -heading + beaconToPlane.bearing + 180);
-            drawRotatedImage(images.compass, 200, 200, -heading);
-            drawRotatedImage(images.plane, 200, 200, 0);
-            if (beaconToPlane.bearing > 90 && beaconToPlane.bearing < 270) {
-                drawRotatedImage(images.to, 200, 200, -heading + course);
-            } else if(beaconToPlane.bearing < 90 || beaconToPlane.bearing > 270) {
-                drawRotatedImage(images.from, 200, 200, -heading + course);
+    var _imageKeys = Object.keys(images);
+    for (var i = 0; i < _imageKeys.length; i++) {
+        (function (j) {
+            images[_imageKeys[j]].img = new Image();
+            images[_imageKeys[j]].img.onload = function () {
+                if (j + 1 < _imageKeys.length) {
+                    images[_imageKeys[j + 1]].img.src = images[_imageKeys[j + 1]].src;
+                } else {
+                    ready = true;
+                    $this.draw();
+                }
             }
-            drawRotatedImage(images.course, 200, 200, -heading + course);
-            drawRotatedImage(images.cdi, 200 - (deviation * 9), 200, -heading + course);
-            drawRotatedImage(images.bug, 200, 200, -heading + bug);
+        })(i);
+    }
+    images[_imageKeys[0]].img.src = images[_imageKeys[0]].src;
+
+    $this.draw = function () {
+        if (ready) {
+            drawRotatedImage(images.outer.img, 200, 200, 0);
+            drawRotatedImage(images.bearing.img, 200, 200, -heading + beaconToPlane.bearing + 180);
+            drawRotatedImage(images.compass.img, 200, 200, -heading);
+            drawRotatedImage(images.plane.img, 200, 200, 0);
+            if (beaconToPlane.bearing > 90 && beaconToPlane.bearing < 270) {
+                drawRotatedImage(images.to.img, 200, 200, -heading + course);
+            } else if (beaconToPlane.bearing < 90 || beaconToPlane.bearing > 270) {
+                drawRotatedImage(images.from.img, 200, 200, -heading + course);
+            }
+            drawRotatedImage(images.course.img, 200, 200, -heading + course);
+            drawRotatedImage(images.cdi.img, 200 - (deviation * 9), 200, -heading + course);
+            drawRotatedImage(images.bug.img, 200, 200, -heading + bug);
         }
     }
 
     function drawRotatedImage(img, x, y, angle) {
         ctx.save();
-        ctx.translate(size/2, size/2);
+        ctx.translate(size / 2, size / 2);
         ctx.rotate(toRadians(angle));
         ctx.drawImage(img, -scale(x), -scale(y), scale(img.width), scale(img.height));
         ctx.restore();
@@ -111,17 +115,17 @@ function HSI() {
                 y = plane.pos.y - beacon.pos.y,
                 d = beacon.pos.x <= plane.pos.x ? 90 : 270;
             beaconToPlane.bearing = -toDegrees(Math.atan(y / x)) + d;
-            var distance = Math.sqrt(Math.pow(x,2) + Math.pow(y,2) + Math.pow(plane.param('altitude') * 0.0001645,2));
+            var distance = Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2) + Math.pow(plane.param('altitude') * 0.0001645, 2));
             beaconToPlane.speed = (Math.abs(beaconToPlane.distance - distance) * 3600 * FRAME_RATE) / my.simulationRate;
             beaconToPlane.distance = distance;
         }
     }
 
-    $this.getBeaconToPlaneDistance = function() {
+    $this.getBeaconToPlaneDistance = function () {
         return beaconToPlane.distance;
     }
 
-    $this.getBeaconToPlaneSpeed = function() {
+    $this.getBeaconToPlaneSpeed = function () {
         return beaconToPlane.speed;
     }
 
@@ -135,7 +139,7 @@ function HSI() {
         deviation = Math.min(Math.max(deviation, -12), 12);
     }
 
-    $this.adjustCourse = function(c) {
+    $this.adjustCourse = function (c) {
         if (c === true) {
             course++;
         } else if (c === false) {
@@ -152,9 +156,9 @@ function HSI() {
         $courseBox.val(pad(3, course));
     }
 
-    $this.onFocusCourse = function() {
+    $this.onFocusCourse = function () {
         $courseBox.val('');
-        $courseBox.on('keyup', function() {
+        $courseBox.on('keyup', function () {
             if (!isNumber($courseBox.val())) {
                 $courseBox.blur();
             } else if ($courseBox.val().length == 3) {
@@ -166,12 +170,12 @@ function HSI() {
         });
     }
 
-    $this.onBlurCourse = function() {
+    $this.onBlurCourse = function () {
         $courseBox.off('keyup');
         $courseBox.val(pad(3, course));
     }
 
-    $this.adjustHeadingBug = function(h) {
+    $this.adjustHeadingBug = function (h) {
         if (h === true) {
             bug++;
         } else if (h === false) {
@@ -189,9 +193,9 @@ function HSI() {
         $this.onHeadingBugAdjust(bug);
     }
 
-    $this.onFocusHeadingBug = function() {
+    $this.onFocusHeadingBug = function () {
         $bugBox.val('');
-        $bugBox.on('keyup', function() {
+        $bugBox.on('keyup', function () {
             if (!isNumber($bugBox.val())) {
                 $bugBox.blur();
             } else if ($bugBox.val().length == 3) {
@@ -203,17 +207,18 @@ function HSI() {
         });
     }
 
-    $this.getHeadingBug = function() {
+    $this.getHeadingBug = function () {
         return bug;
     }
 
-    $this.onBlurHeadingBug = function() {
+    $this.onBlurHeadingBug = function () {
         $bugBox.off('keyup');
         $bugBox.val(pad(3, bug));
     }
 
     // callback
-    $this.onHeadingBugAdjust = function(hdg) {}
+    $this.onHeadingBugAdjust = function (hdg) {
+    }
 
     $this.draw();
     $this.adjustCourse(0);
