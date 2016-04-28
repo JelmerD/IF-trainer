@@ -40,31 +40,31 @@ function HSI() {
 
     var images = {
         outer: {
-            src: 'images/hsi-outer.svg',
+            src: 'images/hsi-outer.svg?v=1',
         },
         bearing: {
-            src: 'images/hsi-bearingpointer.svg',
+            src: 'images/hsi-bearingpointer.svg?v=1',
         },
         compass: {
-            src: 'images/hsi-compass.svg',
+            src: 'images/hsi-compass.svg?v=1',
         },
         plane: {
-            src: 'images/hsi-plane.svg',
+            src: 'images/hsi-plane.svg?v=1',
         },
         to: {
-            src: 'images/hsi-to.svg',
+            src: 'images/hsi-to.svg?v=1',
         },
         from: {
-            src: 'images/hsi-from.svg',
+            src: 'images/hsi-from.svg?v=1',
         },
         course: {
-            src: 'images/hsi-course.svg',
+            src: 'images/hsi-course.svg?v=1',
         },
         cdi: {
-            src: 'images/hsi-cdi.svg',
+            src: 'images/hsi-cdi.svg?v=1',
         },
         bug: {
-            src: 'images/hsi-headingbug.svg',
+            src: 'images/hsi-headingbug.svg?v=1',
         },
     };
 

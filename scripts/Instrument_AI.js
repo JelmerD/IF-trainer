@@ -27,10 +27,10 @@ function AI() {
         inner = new Image(),
         outer = new Image();
     gimbal.onload = function() {
-        inner.src = 'images/ai-inner.svg';
+        inner.src = 'images/ai-inner.svg?v=1';
     }
     inner.onload = function() {
-        outer.src = 'images/ai-outer.svg';
+        outer.src = 'images/ai-outer.svg?v=1';
     }
     outer.onload = function() {
         ready = true;
