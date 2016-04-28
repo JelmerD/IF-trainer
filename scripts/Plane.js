@@ -201,12 +201,12 @@ function Plane(lat, lon) {
     $this.toggleAutoTurn = function(hdg) {
         switch (_autoTurn.enabled) {
             case false:
-                enableAutoTurn(_autoTurn.halfStandardRate, '&frac12; standard rate');
+                enableAutoTurn(1, '&frac12; standard rate');
                 break;
-            case _autoTurn.halfStandardRate:
-                enableAutoTurn(_autoTurn.standardRate, 'standard rate');
+            case 1:
+                enableAutoTurn(2, 'standard rate');
                 break;
-            case _autoTurn.standardRate:
+            case 2:
                 $this.disableAutoTurn();
                 break;
         }
@@ -254,14 +254,15 @@ function Plane(lat, lon) {
     }
 
     function autoTurn() {
-        var diff = calcHeadingDiff(_param.heading, _autoTurn.targetHeading);
+        var diff = calcHeadingDiff(_param.heading, _autoTurn.targetHeading),
+            turnRate = _autoTurn.enabled === 1 ? _autoTurn.halfStandardRate : _autoTurn.standardRate;
         if (diff < -.01) {
-            _autoTurn.targetBankAngle = -Math.round(_autoTurn.enabled);
+            _autoTurn.targetBankAngle = -Math.round(turnRate);
             if (diff > _autoTurn.targetBankAngle / 3) {
                 _autoTurn.targetBankAngle = Math.floor(diff);
             }
         } else if (diff > .01) {
-            _autoTurn.targetBankAngle = Math.round(_autoTurn.enabled);
+            _autoTurn.targetBankAngle = Math.round(turnRate);
             if (diff < _autoTurn.targetBankAngle / 3) {
                 _autoTurn.targetBankAngle = Math.ceil(diff);
             }
