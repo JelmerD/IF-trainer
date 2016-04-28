@@ -52,15 +52,32 @@ function Scene() {
         38: 'arrow_up',
         39: 'arrow_right',
         40: 'arrow_down',
+        65: 'a',
         66: 'b',
         67: 'c',
+        68: 'd',
+        69: 'e',
+        70: 'f',
+        71: 'g',
+        72: 'h',
+        73: 'i',
+        74: 'j',
+        75: 'k',
         76: 'l',
         77: 'm',
+        78: 'n',
+        79: 'o',
         80: 'p',
+        81: 'q',
         82: 'r',
         83: 's',
         84: 't',
+        85: 'u',
+        86: 'v',
         87: 'w',
+        88: 'x',
+        89: 'y',
+        90: 'z',
         107: 'num_plus',
         109: 'num_minus',
         187: 'pad_plus',
@@ -100,16 +117,16 @@ function Scene() {
      */
     var keyUp = {
         esc: function () {
-            $this.closeBeaconSelect();
-            $this.closeWindSelect();
-            $this.closeLocationSelect();
-            $(':focus').blur();
+            $this.closeModal();
         },
         b: function () {
             $('.control-group.hsi-bug .value').focus();
         },
         c: function () {
             $('.control-group.hsi-course .value').focus();
+        },
+        h: function () {
+            $this.toggleModal($('.modal#help'));
         },
         l: function () {
             $this.openLocationSelect();
@@ -172,6 +189,11 @@ function Scene() {
                 control: $('.control-group.wind .value')
             }
         };
+
+        $('.modal').on('click', function (e) {
+            if (e.target != this) return;
+            $this.closeModal();
+        });
     }
 
     /**
@@ -185,15 +207,15 @@ function Scene() {
         addBeacon('WDT');
         addBeacon('GZR');
         addBeacon('LWD');
+        $this.selectBeacon(1);
         my.plane = new Plane(my.beacon.WDT.lat, my.beacon.WDT.lon);
         my.map.moveToLatLon(my.beacon.WDT.lat, my.beacon.WDT.lon);
-        $this.selectBeacon(1);
 
         my.plane.onPositionUpdate = function (position) {
             my.map.appendTrackPoint(position);
         }
 
-        my.plane.onControlUpdate = function() {
+        my.plane.onControlUpdate = function () {
             updateInstrumentAI();
         }
 
@@ -267,6 +289,32 @@ function Scene() {
         $('.control-group.simulation-rate .value').text(my.simulationRate + 'x');
     }
 
+    $this.openModal = function (e, focus) {
+        $this.closeModal();
+        e.addClass('show');
+        e.find('input').val('');
+        if (focus !== undefined) {
+            e.find('input' + focus).focus();
+        }
+    }
+
+    $this.closeModal = function (e) {
+        $(':focus').blur();
+        if (e == undefined) {
+            $('.modal').removeClass('show');
+        } else {
+            e.removeClass('show');
+        }
+    }
+
+    $this.toggleModal = function (e) {
+        if (e.is(':visible')) {
+            $this.closeModal(e);
+        } else {
+            $this.openModal(e);
+        }
+    }
+
     $this.openBeaconSelect = function () {
         if ($('#beacon-select ul').html() == '') {
             var n = beaconIndexes.length, i = -1;
@@ -280,32 +328,33 @@ function Scene() {
                 $('#beacon-select ul').append(h);
             }
         }
-        $('#beacon-select').show();
-        $('#beacon-select input').val('').focus();
+        $this.openModal($('#beacon-select'), '');
     }
 
     $this.closeBeaconSelect = function () {
-        $('#beacon-select').hide();
+        $this.closeModal($('#beacon-select'));
     }
 
     $this.selectBeacon = function (value) {
         $this.closeBeaconSelect();
         if (isNumber(value) && beaconIndexes[value - 1] != undefined) {
+            if (my.currentBeacon != undefined) {
+                my.beacon[beaconIndexes[my.currentBeacon - 1]].active = false;
+            }
             my.currentBeacon = value;
-            my.instrument.hsi.updateBeacon(my.beacon[beaconIndexes[value - 1]]);
-            $('.info.station .value').val(my.beacon[beaconIndexes[value - 1]].name);
+            my.beacon[beaconIndexes[my.currentBeacon - 1]].active = true;
+            my.instrument.hsi.updateBeacon(my.beacon[beaconIndexes[my.currentBeacon - 1]]);
+            $('.info.station .value').val(my.beacon[beaconIndexes[my.currentBeacon - 1]].name);
+            my.map.redraw();
         }
     }
 
     $this.openLocationSelect = function () {
-        $('#location-select').show();
-        $('#location-select input.distance').val('');
-        $('#location-select input.heading').val('');
-        $('#location-select input.radial').val('').focus();
+        $this.openModal($('#location-select'), '.radial');
     }
 
     $this.closeLocationSelect = function () {
-        $('#location-select').hide();
+        $this.closeModal($('#location-select'));
     }
 
     $this.selectLocationRadial = function (value) {
@@ -345,13 +394,11 @@ function Scene() {
     }
 
     $this.openWindSelect = function () {
-        $('#wind-select').show();
-        $('#wind-select input.velocity').val('');
-        $('#wind-select input.direction').val('').focus();
+        $this.openModal($('#wind-select'), '.direction');
     }
 
     $this.closeWindSelect = function () {
-        $('#wind-select').hide();
+        $this.closeModal($('#wind-select'));
     }
 
     $this.selectWindDirection = function (value) {

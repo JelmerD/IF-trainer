@@ -30,6 +30,7 @@ function Map() {
             track: '#f00',
             grid: '#333',
             beacon: '#999',
+            activeBeacon: '#5dd'
         },
         width = window.innerWidth - $('.container.instruments').outerWidth() - $('.container.controls').outerWidth() - 1,
         height = window.innerHeight,
@@ -122,7 +123,7 @@ function Map() {
         if (visible) {
             // draw n circles, every d nM apart
             var n = 4, d = 5, i = 0;
-            ctx.strokeStyle = colors.beacon;
+            ctx.strokeStyle = beacon.active ? colors.activeBeacon : colors.beacon;
             ctx.fillStyle = colors.beacon;
             ctx.font = '12px sans-serif';
             ctx.strokeWidth = 1;
@@ -295,7 +296,7 @@ function Map() {
         ctx = $canvas.get(0).getContext('2d');
         //ctx.transform(1, 0, 0, -1, 0, height);
         ctx.translate((width / 2) - x(viewCenter.x), -y(viewCenter.y) + (height / 2));
-        $('.control-group.zoom').show();
+        $('.container.map .control-container').show();
         $('.control-group.map .value').addClass('on');
         $('.container.map .tooltip').hide();
         visible = true;
@@ -305,7 +306,7 @@ function Map() {
     $this.hide = function() {
         ctx = undefined;
         $canvas.off().remove();
-        $('.control-group.zoom').hide();
+        $('.container.map .control-container').hide();
         $('.control-group.map .value').removeClass('on');
         $('.container.map .tooltip').show();
         visible = false;
@@ -345,6 +346,13 @@ function Map() {
         }
         moveToViewCenter();
         updateZoomIndicator();
+        $this.redraw();
+    }
+
+    $this.moveToXY = function(x, y) {
+        moveToOrigin();
+        viewCenter = {x: x, y: y};
+        moveToViewCenter();
         $this.redraw();
     }
 

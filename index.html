@@ -115,18 +115,24 @@
 
 </div>
 <div class="container map">
-    <div class="control-group zoom" style="display: none;">
-        <div class="label">Zoom</div>
-        <button class="col1" onclick="javascript: my.map.zoom(-1);">-</button>
-        <input class="col2 value" type="number" disabled="disabled"/>
-        <button class="col1" onclick="javascript: my.map.zoom(1);">+</button>
+    <div class="control-container" style="display: none;">
+        <div class="control-group zoom">
+            <div class="label">Zoom</div>
+            <button class="col1" onclick="javascript: my.map.zoom(-1);">-</button>
+            <input class="col2 value" type="number" disabled="disabled"/>
+            <button class="col1" onclick="javascript: my.map.zoom(1);">+</button>
+        </div>
+        <div class="control-group recenter">
+            <div class="label"></div>
+            <button class="col4" onclick="my.map.moveToXY(my.plane.pos.x, my.plane.pos.y);">Recenter map</button>
+        </div>
     </div>
     <div class="tooltip" onclick="javascript: my.map.toggleVisibility();">Press &quot;M&quot; to show the map</div>
 </div>
 
-<div class="select" id="beacon-select" onclick="javascript: my.scene.closeBeaconSelect();">
+<div class="modal s select" id="beacon-select">
     <div class="inner">
-        <div class="header">Select beacon</div>
+        <h1>Select beacon</h1>
         <ul></ul>
         <div>
             <input class="value" type="number" placeholder="Type number" onkeyup="javascript: my.scene.selectBeacon($(this).val());"/>
@@ -134,21 +140,48 @@
     </div>
 </div>
 
-<div class="select" id="wind-select" onclick="javascript: my.scene.closeWindSelect();">
+<div class="modal s select" id="wind-select">
     <div class="inner">
-        <div class="header">Set wind</div>
+        <h1>Set wind</h1>
         <input class="direction" type="number" placeholder="direction (ie. 240)" oninput="javascript: my.scene.selectWindDirection($(this).val());"/>
         <input class="velocity" type="number" placeholder="velocity (ie. 07)" oninput="javascript: my.scene.selectWindVelocity($(this).val());"/>
     </div>
 </div>
 
-<div class="select" id="location-select" onclick="javascript: my.scene.closeLocationSelect();">
+<div class="modal s select" id="location-select">
     <div class="inner">
-        <div class="header">Set location</div> on current station
+        <h1>Set location</h1>
         <input class="radial" type="number" placeholder="radial (ie. 250)" oninput="javascript: my.scene.selectLocationRadial($(this).val());"/>
         <input class="distance" type="number" placeholder="distance (ie. 08)" oninput="javascript: my.scene.selectLocationDistance($(this).val());"/>
         <input class="heading" type="number" placeholder="heading (ie. 070)" oninput="javascript: my.scene.selectLocationHeading($(this).val());"/>
     </div>
+</div>
+
+<div class="modal show" id="help">
+    <div class="inner">
+        <h1>IF-trainer</h1>
+        <p>This program is used to train your HSI skills. There are some quick-access shortcuts on your keyboard, these are marked yellow in the controls section (middle column).</p>
+        <p>But that's not all, these are some other shortcuts:</p>
+        <p>
+        <ul>
+            <li>- Arrows: Steer the plane (roll and pitch)</li>
+            <li>- + and -: Change the KIAS</li>
+            <li>- P: Pause the simulation</li>
+            <li>- L: Set the location based on the current station</li>
+            <li>- H: re-open this dialog</li>
+        </ul>
+        </p>
+        <p>Another usefull thing to know is that you can click on the AI to recenter the planes attitude.</p>
+        <h2>Open Source</h2>
+        <p>The code is open source, you can contribute at <a href="https://github.com/JelmerD/IF-Trainer" target="_blank">github.com</a> and that is also the location to report bugs/issues or suggest edits.</p>
+        <p>Don't have a Github account? Try to contact me via another method. I'd suggest you use a homing pigeon. I'll leave you to it, Sherlock.</p>
+        <h2>Disclaimer</h2>
+        <p>I am not responsible if you f*ck up your flight because of training with this program. I will try to get it as real as possible though, but you should remember that it is a trainer/simulator.</p>
+    </div>
+</div>
+
+<div id="copyright">
+    &copy2016 Jelmer Dr&ouml;ge - EMVO 16-01
 </div>
 
 

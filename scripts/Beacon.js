@@ -40,4 +40,5 @@ function Beacon(id) {
     $this.lat = beacons[id].lat;
     $this.lon = beacons[id].lon;
     $this.pos = coordinateToNauticalMile($this.lat, $this.lon);
+    $this.active = false;
 }
