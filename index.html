@@ -137,17 +137,17 @@
 <div class="select" id="wind-select" onclick="javascript: my.scene.closeWindSelect();">
     <div class="inner">
         <div class="header">Set wind</div>
-        <input class="direction" type="number" placeholder="direction (ie. 240)" onkeyup="javascript: my.scene.selectWindDirection($(this).val());"/>
-        <input class="velocity" type="number" placeholder="velocity (ie. 07)" onkeyup="javascript: my.scene.selectWindVelocity($(this).val());"/>
+        <input class="direction" type="number" placeholder="direction (ie. 240)" oninput="javascript: my.scene.selectWindDirection($(this).val());"/>
+        <input class="velocity" type="number" placeholder="velocity (ie. 07)" oninput="javascript: my.scene.selectWindVelocity($(this).val());"/>
     </div>
 </div>
 
 <div class="select" id="location-select" onclick="javascript: my.scene.closeLocationSelect();">
     <div class="inner">
         <div class="header">Set location</div> on current station
-        <input class="radial" type="number" placeholder="radial (ie. 250)" onkeyup="javascript: my.scene.selectLocationRadial($(this).val());"/>
-        <input class="distance" type="number" placeholder="distance (ie. 08)" onkeyup="javascript: my.scene.selectLocationDistance($(this).val());"/>
-        <input class="heading" type="number" placeholder="heading (ie. 070)" onkeyup="javascript: my.scene.selectLocationHeading($(this).val());"/>
+        <input class="radial" type="number" placeholder="radial (ie. 250)" oninput="javascript: my.scene.selectLocationRadial($(this).val());"/>
+        <input class="distance" type="number" placeholder="distance (ie. 08)" oninput="javascript: my.scene.selectLocationDistance($(this).val());"/>
+        <input class="heading" type="number" placeholder="heading (ie. 070)" oninput="javascript: my.scene.selectLocationHeading($(this).val());"/>
     </div>
 </div>
 
