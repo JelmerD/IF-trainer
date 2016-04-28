@@ -10,21 +10,21 @@
 			S163.957,1.5,53.5,1.5z M53.5,361.5c-88.364,0-160-71.633-160-160c0-88.364,71.636-160,160-160c88.367,0,160,71.636,160,160
 			C213.5,289.867,141.867,361.5,53.5,361.5z"/>
 		
-			<line display="inline" fill="#F2F2F2" stroke="#FFFFFF" stroke-width="2" stroke-miterlimit="10" x1="53.5" y1="41.5" x2="53.5" y2="17.5"/>
+			<line display="inline" fill="#F2F2F2" stroke="#FFFFFF" stroke-width="2" stroke-miterlimit="10" x1="53.5" y1="58.891" x2="53.5" y2="24"/>
 		
-			<line display="inline" fill="#F2F2F2" stroke="#FFFFFF" stroke-width="2" stroke-miterlimit="10" x1="166.637" y1="88.362" x2="183.607" y2="71.392"/>
+			<line display="inline" fill="#F2F2F2" stroke="#FFFFFF" stroke-width="2" stroke-miterlimit="10" x1="154.34" y1="100.66" x2="169.465" y2="85.534"/>
 		
-			<line display="inline" fill="#F2F2F2" stroke="#FFFFFF" stroke-width="2" stroke-miterlimit="10" x1="213.5" y1="201.499" x2="237.5" y2="201.5"/>
+			<line display="inline" fill="#F2F2F2" stroke="#FFFFFF" stroke-width="2" stroke-miterlimit="10" x1="196.109" y1="201.499" x2="217.5" y2="201.5"/>
 		
-			<line display="inline" fill="#F2F2F2" stroke="#FFFFFF" stroke-width="2" stroke-miterlimit="10" x1="-106.5" y1="201.5" x2="-130.5" y2="201.5"/>
+			<line display="inline" fill="#F2F2F2" stroke="#FFFFFF" stroke-width="2" stroke-miterlimit="10" x1="-89.109" y1="201.5" x2="-110.5" y2="201.5"/>
 		
-			<line display="inline" fill="#F2F2F2" stroke="#FFFFFF" stroke-width="2" stroke-miterlimit="10" x1="-59.638" y1="88.363" x2="-76.608" y2="71.392"/>
+			<line display="inline" fill="#F2F2F2" stroke="#FFFFFF" stroke-width="2" stroke-miterlimit="10" x1="-47.341" y1="100.66" x2="-62.466" y2="85.534"/>
 		
-			<line display="inline" fill="#F2F2F2" stroke="#FFFFFF" stroke-width="2" stroke-miterlimit="10" x1="53.348" y1="361.502" x2="53.326" y2="385.502"/>
+			<line display="inline" fill="#F2F2F2" stroke="#FFFFFF" stroke-width="2" stroke-miterlimit="10" x1="53.365" y1="344.11" x2="53.345" y2="365.502"/>
 		
-			<line display="inline" fill="#F2F2F2" stroke="#FFFFFF" stroke-width="2" stroke-miterlimit="10" x1="-59.744" y1="314.532" x2="-76.731" y2="331.486"/>
+			<line display="inline" fill="#F2F2F2" stroke="#FFFFFF" stroke-width="2" stroke-miterlimit="10" x1="-47.435" y1="302.246" x2="-62.575" y2="317.357"/>
 		
-			<line display="inline" fill="#F2F2F2" stroke="#FFFFFF" stroke-width="2" stroke-miterlimit="10" x1="166.531" y1="314.746" x2="183.484" y2="331.732"/>
+			<line display="inline" fill="#F2F2F2" stroke="#FFFFFF" stroke-width="2" stroke-miterlimit="10" x1="154.244" y1="302.436" x2="169.355" y2="317.577"/>
 	</g>
 	<g id="Bearing_pointer" display="none">
 		<g display="inline">
@@ -241,26 +241,28 @@
 		</g>
 	</g>
 	<g id="To" display="none">
+		<polygon display="inline" fill="#FFFFFF" points="36,181.547 26.069,166.5 16,181.453 		"/>
 	</g>
 	<g id="From" display="none">
+		<polygon display="inline" fill="#FFFFFF" points="16,221.5 26,236.5 36,221.5 		"/>
 	</g>
 	<g id="Plane">
-		<rect x="51" y="174" fill="#FFFFFF" width="5" height="70"/>
+		<rect x="51" y="166.5" fill="#FFFFFF" width="5" height="70"/>
 		<rect x="26" y="199" fill="#FFFFFF" width="55" height="5"/>
-		<rect x="41" y="229" fill="#FFFFFF" width="25" height="5"/>
+		<rect x="41" y="221.5" fill="#FFFFFF" width="25" height="5"/>
 	</g>
 	<g id="Course" display="none">
 		<g display="inline">
-			<line fill="#C9D32C" x1="53.5" y1="151.5" x2="53.5" y2="81.5"/>
+			<line fill="#C9D32C" x1="53.5" y1="131" x2="53.5" y2="62"/>
 			<g>
-				<line fill="none" stroke="#FCEE21" stroke-width="2" stroke-miterlimit="10" x1="53.5" y1="151.5" x2="53.5" y2="91.546"/>
+				<line fill="none" stroke="#FCEE21" stroke-width="2" stroke-miterlimit="10" x1="53.5" y1="131" x2="53.5" y2="72.046"/>
 				<g>
-					<polygon fill="#FCEE21" points="60.481,93.589 53.5,81.5 46.519,93.589 					"/>
+					<polygon fill="#FCEE21" points="60.481,74.089 53.5,62 46.519,74.089 					"/>
 				</g>
 			</g>
 		</g>
 		
-			<line display="inline" fill="#C9D32C" stroke="#FCEE21" stroke-width="2" stroke-miterlimit="10" x1="53.5" y1="321.5" x2="53.5" y2="251.5"/>
+			<line display="inline" fill="#C9D32C" stroke="#FCEE21" stroke-width="2" stroke-miterlimit="10" x1="53.5" y1="341" x2="53.5" y2="272"/>
 		<circle display="inline" fill="#FFFFFF" cx="8.5" cy="201.5" r="5"/>
 		<circle display="inline" fill="#FFFFFF" cx="-36.5" cy="201.5" r="5"/>
 		<circle display="inline" fill="#FFFFFF" cx="143.5" cy="201.5" r="5"/>
@@ -268,7 +270,7 @@
 	</g>
 	<g id="Course_deviation_indicator" display="none">
 		
-			<line display="inline" fill="#C9D32C" stroke="#FCEE21" stroke-width="2" stroke-miterlimit="10" x1="53.5" y1="250.5" x2="53.5" y2="152.5"/>
+			<line display="inline" fill="#C9D32C" stroke="#FCEE21" stroke-width="2" stroke-miterlimit="10" x1="53.5" y1="270.5" x2="53.5" y2="132.5"/>
 	</g>
 	<g id="Heading_bug" display="none">
 		<polygon display="inline" fill="#FFFFFF" points="41.299,62.033 42,70.043 47.898,69.5 51.5,66.875 51.469,61.516 		"/>
