@@ -154,6 +154,9 @@ function HSI() {
             course = 359;
         }
         $courseBox.val(pad(3, course));
+        if (my.map) {
+            my.map.redraw();
+        }
     }
 
     $this.onFocusCourse = function () {
@@ -173,6 +176,10 @@ function HSI() {
     $this.onBlurCourse = function () {
         $courseBox.off('keyup');
         $courseBox.val(pad(3, course));
+    }
+
+    $this.getCourse = function() {
+        return course;
     }
 
     $this.adjustHeadingBug = function (h) {

@@ -142,6 +142,21 @@ function Map() {
             ctx.lineTo(x(beacon.pos.x), y(beacon.pos.y + (n * d)));
             ctx.stroke();
             ctx.fillText(beacon.name, x(beacon.pos.x) + 5, y(beacon.pos.y) - 5);
+
+            if (beacon.active) {
+                ctx.strokeStyle = '#ff0';
+                ctx.fillStyle = '#ff0';
+                ctx.beginPath();
+                ctx.moveTo(x(beacon.pos.x), y(beacon.pos.y));
+                ctx.lineTo(x(beacon.pos.x + (n * d * Math.sin(toRadians(my.instrument.hsi.getCourse())))), y(beacon.pos.y + (n * d * Math.cos(toRadians(my.instrument.hsi.getCourse())))));
+                ctx.stroke();
+                ctx.beginPath();
+                ctx.setLineDash([4, 10]);
+                ctx.moveTo(x(beacon.pos.x), y(beacon.pos.y));
+                ctx.lineTo(x(beacon.pos.x - (n * d * Math.sin(toRadians(my.instrument.hsi.getCourse())))), y(beacon.pos.y - (n * d * Math.cos(toRadians(my.instrument.hsi.getCourse())))));
+                ctx.stroke();
+                ctx.setLineDash([0]);
+            }
         }
     }
 

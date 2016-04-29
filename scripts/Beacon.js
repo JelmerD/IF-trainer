@@ -43,12 +43,10 @@ function Beacon(id) {
 
     $this.off = function() {
         $this.active = false;
-        $this.course = false;
     }
 
-    $this.on = function(c) {
+    $this.on = function() {
         $this.active = true;
-        $this.course = c == undefined ? 0 : 360;
     }
 
     $this.off();

@@ -342,7 +342,7 @@ function Scene() {
                 my.beacon[beaconIndexes[my.currentBeacon - 1]].off();
             }
             my.currentBeacon = value;
-            my.beacon[beaconIndexes[my.currentBeacon - 1]].on(my.instrument.hsi.course);
+            my.beacon[beaconIndexes[my.currentBeacon - 1]].on();
             my.instrument.hsi.updateBeacon(my.beacon[beaconIndexes[my.currentBeacon - 1]]);
             $('.info.station .value').val(my.beacon[beaconIndexes[my.currentBeacon - 1]].name);
             my.map.redraw();
