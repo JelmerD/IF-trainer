@@ -339,10 +339,10 @@ function Scene() {
         $this.closeBeaconSelect();
         if (isNumber(value) && beaconIndexes[value - 1] != undefined) {
             if (my.currentBeacon != undefined) {
-                my.beacon[beaconIndexes[my.currentBeacon - 1]].active = false;
+                my.beacon[beaconIndexes[my.currentBeacon - 1]].off();
             }
             my.currentBeacon = value;
-            my.beacon[beaconIndexes[my.currentBeacon - 1]].active = true;
+            my.beacon[beaconIndexes[my.currentBeacon - 1]].on(my.instrument.hsi.course);
             my.instrument.hsi.updateBeacon(my.beacon[beaconIndexes[my.currentBeacon - 1]]);
             $('.info.station .value').val(my.beacon[beaconIndexes[my.currentBeacon - 1]].name);
             my.map.redraw();
