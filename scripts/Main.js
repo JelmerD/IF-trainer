@@ -47,6 +47,7 @@ function Scene() {
      * @type Object
      */
     var keyMap = {
+        8: 'backspace',
         27: 'esc',
         37: 'arrow_left',
         38: 'arrow_up',
@@ -90,6 +91,11 @@ function Scene() {
      * @type Object
      */
     var keyDown = {
+        backspace: function(e) {
+            if (!$(e.target).is('input, textarea')) {
+                e.preventDefault();
+            }
+        },
         arrow_left: function () {
             my.plane.disableAutoTurn();
             my.plane.rollLeft();
@@ -232,7 +238,7 @@ function Scene() {
         $(document).on('keydown', function (e) {
             //debug('keyDown: ' + e.keyCode);
             if (keyDown[keyMap[e.keyCode]] != undefined) {
-                keyDown[keyMap[e.keyCode]]();
+                keyDown[keyMap[e.keyCode]](e);
             }
         });
 
@@ -240,7 +246,7 @@ function Scene() {
         $(document).on('keyup', function (e) {
             //debug('keyUp: ' + e.keyCode);
             if (keyUp[keyMap[e.keyCode]] != undefined) {
-                keyUp[keyMap[e.keyCode]]();
+                keyUp[keyMap[e.keyCode]](e);
             }
         });
     }
