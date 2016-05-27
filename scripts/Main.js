@@ -213,6 +213,8 @@ function Scene() {
         addBeacon('WDT');
         addBeacon('GZR');
         addBeacon('LWD');
+        addBeacon('EHV');
+        addBeacon('VKL');
         $this.selectBeacon(1);
         my.plane = new Plane(my.beacon.WDT.lat, my.beacon.WDT.lon);
         my.map.moveToLatLon(my.beacon.WDT.lat, my.beacon.WDT.lon);

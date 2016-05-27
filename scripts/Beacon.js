@@ -29,6 +29,20 @@ function Beacon(id) {
             chan: '94X',
             lat: [53, 13.52],
             lon: [5, 45.15],
+        },
+        EHV: {
+            name: 'EHV',
+            type: 'tacan',
+            chan: '119X',
+            lat: [51, 27.01],
+            lon: [5, 22.47],
+        },
+        VKL: {
+            name: 'VKL',
+            type: 'tacan',
+            chan: '20X',
+            lat: [51, 39.43],
+            lon: [5, 42.47],
         }
     };
 
