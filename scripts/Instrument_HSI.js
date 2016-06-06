@@ -16,6 +16,7 @@ function HSI() {
     var beacon, plane;
     var beaconToPlane = {distance: 0, speed: 0, bearing: 90};
     var deviation = 0;
+    var toFrom = 0;
 
     function scale(x) {
         return (x / 400) * size;
@@ -36,6 +37,7 @@ function HSI() {
     $this.timerTick = function () {
         calcBeaconToPlane(FRAME_RATE);
         calcDeviation();
+        calcToFrom();
     }
 
     var images = {
@@ -90,10 +92,10 @@ function HSI() {
             drawRotatedImage(images.bearing.img, 200, 200, -heading + beaconToPlane.bearing + 180);
             drawRotatedImage(images.compass.img, 200, 200, -heading);
             drawRotatedImage(images.plane.img, 200, 200, 0);
-            if (beaconToPlane.bearing > 90 && beaconToPlane.bearing < 270) {
-                drawRotatedImage(images.to.img, 200, 200, -heading + course);
-            } else if (beaconToPlane.bearing < 90 || beaconToPlane.bearing > 270) {
+            if (toFrom < 90 || toFrom > 270) {
                 drawRotatedImage(images.from.img, 200, 200, -heading + course);
+            } else {
+                drawRotatedImage(images.to.img, 200, 200, -heading + course);
             }
             drawRotatedImage(images.course.img, 200, 200, -heading + course);
             drawRotatedImage(images.cdi.img, 200 - (deviation * 9), 200, -heading + course);
@@ -137,6 +139,10 @@ function HSI() {
             deviation = -(180 + deviation);
         }
         deviation = Math.min(Math.max(deviation, -12), 12);
+    }
+
+    function calcToFrom() {
+        toFrom = Math.abs(course - beaconToPlane.bearing)
     }
 
     $this.adjustCourse = function (c) {
