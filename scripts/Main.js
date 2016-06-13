@@ -215,12 +215,14 @@ function Scene() {
         addBeacon('LWD');
         addBeacon('EHV');
         addBeacon('VKL');
+        addBeacon('DLN');
         $this.selectBeacon(1);
         my.plane = new Plane(my.beacon.WDT.lat, my.beacon.WDT.lon);
         my.map.moveToLatLon(my.beacon.WDT.lat, my.beacon.WDT.lon);
 
         my.plane.onPositionUpdate = function (position) {
             my.map.appendTrackPoint(position);
+            my.map.redraw();
         }
 
         my.plane.onControlUpdate = function () {

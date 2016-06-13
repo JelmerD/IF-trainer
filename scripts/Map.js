@@ -28,6 +28,7 @@ function Map() {
     ////////////
     var colors = {
             track: '#f00',
+            currentPos: '#f77',
             grid: '#333',
             beacon: '#999',
             activeBeacon: '#5dd'
@@ -187,6 +188,16 @@ function Map() {
         }
     }
 
+    function drawCurrentPosition() {
+        if (visible && my.plane) {
+            ctx.beginPath();
+            ctx.arc(x(my.plane.pos.x), y(my.plane.pos.y), 10, 0, Math.PI * 2);
+            ctx.strokeStyle = colors.currentPos;
+            ctx.lineWidth = 1;
+            ctx.stroke();
+        }
+    }
+
     function drawWind() {
         if (visible && wind.velocity != 0) {
             ctx.beginPath();
@@ -338,6 +349,7 @@ function Map() {
             drawAreaBorder();
             redrawBeacons();
             redrawTrack();
+            drawCurrentPosition();
             drawWind();
         }
     }
@@ -415,9 +427,6 @@ function Map() {
      */
     $this.appendTrackPoint = function (position) {
         track.push(position);
-        if (track.length > 1) {
-            drawTrackPart(track[track.length - 2], track[track.length - 1]);
-        }
     }
 
     /**

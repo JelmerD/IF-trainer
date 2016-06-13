@@ -43,6 +43,13 @@ function Beacon(id) {
             chan: '20X',
             lat: [51, 39.43],
             lon: [5, 42.47],
+        },
+        DLN: {
+            name: 'DLN',
+            type: 'tacan',
+            chan: '59X',
+            lat: [52, 3.58],
+            lon: [5, 52.32],
         }
     };
 
