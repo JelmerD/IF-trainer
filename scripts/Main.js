@@ -11,7 +11,8 @@ var my = {
     currentBeacon: undefined,
     map: undefined,
     plane: undefined,
-    simulationRate: 1
+    simulationRate: 1,
+    debug: false
 };
 
 var elem = {};
@@ -240,7 +241,7 @@ function Scene() {
     function bindKeys() {
         // keys that can be hold down
         $(document).on('keydown', function (e) {
-            //debug('keyDown: ' + e.keyCode);
+            debug('keyDown: ' + e.keyCode);
             if (keyDown[keyMap[e.keyCode]] != undefined) {
                 keyDown[keyMap[e.keyCode]](e);
             }
@@ -660,5 +661,7 @@ function calcHeadingDiff(a, b) {
  * @param data
  */
 function debug(data) {
-    console.log(data);
+    if (my.debug) {
+        console.log(data);
+    }
 }
