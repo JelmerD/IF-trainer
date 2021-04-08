@@ -417,6 +417,7 @@ function Scene() {
         my.plane.parseBeaconLocation(my.beacon[beaconIndexes[my.currentBeacon - 1]].pos);
         my.map.clearTrack();
         my.plane.clearPositions();
+        my.map.moveToXY(my.plane.pos.x, my.plane.pos.y);
     }
 
     $this.openWindSelect = function () {

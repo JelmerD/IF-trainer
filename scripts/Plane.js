@@ -137,15 +137,19 @@ function Plane(lat, lon) {
      * Calculate the altitude
      */
     $this.calcAltitude = function() {
-        _param.altitude += (((_param.verticalVelocity / 60) * my.simulationRate) / FRAME_RATE);
-        if (_param.altitude < _limits.altitude[0]) {
-            _param.pitch = 0;
-            _param.altitude = 0;
+        // only calculate the altitude if there is a vertical velocity to prevent divide by 0 issues.
+        if (_param.verticalVelocity !== 0) {
+            _param.altitude += (((_param.verticalVelocity / 60) * my.simulationRate) / FRAME_RATE);
+            if (_param.altitude < _limits.altitude[0]) {
+                _param.pitch = 0;
+                _param.altitude = 0;
+            }
+            else if (_param.altitude > _limits.altitude[1]) {
+                _param.pitch = 0;
+                _param.altitude = _limits.altitude[1];
+            }
         }
-        else if (_param.altitude > _limits.altitude[1]) {
-            _param.pitch = 0;
-            _param.altitude = _limits.altitude[1];
-        }
+
     };
 
     /**
