@@ -198,7 +198,7 @@ function Plane(lat, lon) {
         $this.logPosition();
     }
 
-    $this.toggleAutoTurn = function(hdg) {
+    $this.toggleAutoTurn = function() {
         switch (_autoTurn.enabled) {
             case false:
                 enableAutoTurn(1, '&frac12; standard rate');
@@ -232,6 +232,11 @@ function Plane(lat, lon) {
         _param.bankAngle = bank;
         _param.pitch = pitch;
         controlUpdate();
+    }
+
+    $this.setAltitude = function(altitude) {
+        _param.altitude = altitude;
+        //controlUpdate();
     }
 
     $this.setBeaconRadial = function(radial) {

@@ -91,7 +91,7 @@ function Scene() {
      * @type Object
      */
     var keyDown = {
-        backspace: function(e) {
+        backspace: function (e) {
             if (!$(e.target).is('input, textarea')) {
                 e.preventDefault();
             }
@@ -391,16 +391,31 @@ function Scene() {
 
     $this.selectLocationHeading = function (value) {
         if (isNumber(value)) {
-            if (value.length == 3) {
+            if (value.length === 3) {
                 my.plane.setBeaconHeading(value);
-                my.plane.parseBeaconLocation(my.beacon[beaconIndexes[my.currentBeacon - 1]].pos)
-                my.map.clearTrack();
-                my.plane.clearPositions();
+                $('#location-select input.altitude').focus();
+            }
+        } else {
+            $this.closeLocationSelect();
+        }
+    }
+
+    $this.selectLocationAltitude = function (value) {
+        if (isNumber(value)) {
+            if (value.length === 4) {
+                my.plane.setAltitude(value);
+                $this.updateSelectedLocation();
                 $this.closeLocationSelect();
             }
         } else {
             $this.closeLocationSelect();
         }
+    }
+
+    $this.updateSelectedLocation = function() {
+        my.plane.parseBeaconLocation(my.beacon[beaconIndexes[my.currentBeacon - 1]].pos);
+        my.map.clearTrack();
+        my.plane.clearPositions();
     }
 
     $this.openWindSelect = function () {

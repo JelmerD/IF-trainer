@@ -64,6 +64,11 @@
 </div>
 <div class="container controls">
 
+    <div class="control-group location">
+        <div class="label"><span>L</span>ocation</div>
+        <button class="value col4" onclick="javascript: my.scene.openLocationSelect();">Set location</button>
+    </div>
+
     <div class="control-group info simulation-rate" title="Speed up or slow down the simulation rate">
         <div class="label"><span>R</span>ate</div>
         <button class="col3 value" onclick="javascript: my.scene.toggleSimulationRate()">
@@ -154,6 +159,7 @@
         <input class="radial" type="number" placeholder="radial (ie. 250)" oninput="javascript: my.scene.selectLocationRadial($(this).val());"/>
         <input class="distance" type="number" placeholder="distance (ie. 08)" oninput="javascript: my.scene.selectLocationDistance($(this).val());"/>
         <input class="heading" type="number" placeholder="heading (ie. 070)" oninput="javascript: my.scene.selectLocationHeading($(this).val());"/>
+        <input class="altitude" type="number" placeholder="altitude (ie. 1000)" oninput="javascript: my.scene.selectLocationAltitude($(this).val());"/>
     </div>
 </div>
 
@@ -162,16 +168,17 @@
         <h1>HSI-trainer</h1>
         <p>This program is used to train your HSI skills. There are some quick-access shortcuts on your keyboard, these are marked yellow in the controls section (middle column).</p>
         <p>But that's not all, these are some other shortcuts:</p>
-        <p>
         <ul>
             <li>- Arrows: Steer the plane (roll and pitch)</li>
             <li>- + and -: Change the KIAS</li>
             <li>- P: Pause the simulation</li>
-            <li>- L: Set the location based on the current station</li>
             <li>- H: re-open this dialog</li>
         </ul>
-        </p>
         <p>Another useful thing to know is that you can click on the AI to recenter the planes attitude.</p>
+
+        <h2>Updates</h2>
+        <p>2021: set altitude when setting <u>L</u>ocation</p>
+        <p>2016: initial release</p>
         <h2>Open Source</h2>
         <p>The code is open source, you can contribute at <a href="https://github.com/JelmerD/hsi-trainer" target="_blank">github.com</a> and that is also the location to report bugs/issues or suggest edits.</p>
         <p>Don't have a Github account? Try to contact me via another method. I'd suggest you use a homing pigeon.</p>
@@ -181,7 +188,7 @@
 </div>
 
 <div id="copyright">
-    &copy2016 Jelmer Dr&ouml;ge - EMVO 16-01 - version 160428.1
+    &copy2021 Jelmer Dr&ouml;ge - EMVO 16-01 - <a href="https://github.com/JelmerD/hsi-trainer" target="_blank">Github</a>
 </div>
 
 
